@@ -14,8 +14,10 @@ class AuthRepositoryImpl implements AuthRepository {
     required AuthRequest authRequest,
   }) async {
     try {
-      final model = await authRemoteDataSourece.login(authreRuest: authRequest);
-      return right(model.toEntity());
+      final entity = await authRemoteDataSourece.login(
+        authreRuest: authRequest,
+      );
+      return right(entity.toEntity());
     } catch (e) {
       return left(ServerFailure());
     }

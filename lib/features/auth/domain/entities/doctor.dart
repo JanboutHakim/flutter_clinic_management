@@ -8,6 +8,7 @@ class Doctor extends User {
   final List<Object> patients;
   final int yearsOfExperience;
   Doctor({
+    super.id,
     required this.yearsOfExperience,
     super.token,
     required this.spec,

@@ -10,6 +10,7 @@ class DoctorModel extends UserModel {
   final List<Object> patients;
   final int yearsOfExperience;
   DoctorModel({
+    super.id,
     required this.yearsOfExperience,
     required this.spec,
     required this.address,
@@ -41,6 +42,7 @@ class DoctorModel extends UserModel {
       (e) => e.name == json['userRoleEnum'],
     ),
     token: json['token'],
+    id: json["id"],
   );
 
   @override

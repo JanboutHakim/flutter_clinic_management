@@ -5,6 +5,7 @@ class Patient extends User {
   final List<Object> drugs;
   final List<Object> documents;
   Patient({
+    super.id,
     this.appointments = const [],
     this.documents = const [],
     this.drugs = const [],

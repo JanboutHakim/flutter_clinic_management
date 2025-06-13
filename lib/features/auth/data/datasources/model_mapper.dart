@@ -1,4 +1,5 @@
 import 'package:doclib/core/constants/user_role_enum.dart';
+import 'package:doclib/core/errors/exeptions.dart';
 import 'package:doclib/features/auth/data/models/doctor_model.dart';
 import 'package:doclib/features/auth/data/models/patient_model.dart';
 import 'package:doclib/features/auth/data/models/user_model.dart';
@@ -6,7 +7,7 @@ import 'package:doclib/features/auth/data/models/user_model.dart';
 class UserMapper {
   static UserModel fromJson(Map<String, dynamic> json) {
     final role = UserRoleEnum.values.firstWhere(
-      (e) => e.displayName == json['userRoleEnum'],
+      (e) => e.displayName == json['Role'],
     );
     switch (role) {
       case UserRoleEnum.doctor:
@@ -14,7 +15,7 @@ class UserMapper {
       case UserRoleEnum.patient:
         return PatientModel.fromJson(json);
       default:
-        throw Exception();
+        throw ServerException();
     }
   }
 }

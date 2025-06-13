@@ -8,6 +8,7 @@ class PatientModel extends UserModel {
   final List<Object> drugs;
   final List<Object> documents;
   PatientModel({
+    super.id,
     super.token,
     required super.birthDate,
     required super.lastName,
@@ -34,6 +35,7 @@ class PatientModel extends UserModel {
       (e) => e.name == json['userRoleEnum'],
     ),
     token: json['token'],
+    id: json["id"],
   );
   @override
   Map<String, dynamic> toJson() => {

@@ -19,7 +19,7 @@ class AuthRemoteDataSoureceImpl implements AuthRemoteDataSource {
   @override
   Future<UserModel> register({required AuthRequest authRequest}) async {
     log("start sendeing register request ");
-    print("fofofofofofofofofofofo");
+    // print("fofofofofofofofofofofo");
     final url = Uri.parse('http://192.168.1.137:8080/auth/register');
     final body = authRequest.toJson();
     final response = await client.post(
@@ -35,7 +35,7 @@ class AuthRemoteDataSoureceImpl implements AuthRemoteDataSource {
 
   @override
   Future<UserModel> login({required AuthRequest authreRuest}) async {
-    final url = Uri.parse('');
+    final url = Uri.parse('http://192.168.1.137:8080/auth/login');
     final body = authreRuest.toJson();
     final response = await client.post(
       url,

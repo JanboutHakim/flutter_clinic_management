@@ -5,8 +5,9 @@ import 'package:doclib/core/constants/user_role_enum.dart';
 
 final AuthRequest ta = AuthRequest.nullvalues();
 
+/// The [child] argument is required.
+/// this is auth class that hold credentionals to to server
 class AuthRequest {
-  /// The [child] argument is required.
   String? username;
   String? password;
   String? lastName;

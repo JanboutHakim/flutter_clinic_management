@@ -6,6 +6,7 @@ import 'package:doclib/features/auth/domain/entities/user.dart';
 
 abstract class UserModel extends User {
   UserModel({
+    super.id,
     required super.birthDate,
     required super.lastName,
     required super.firstName,
