@@ -47,7 +47,7 @@ class DoctorModel extends UserModel {
   Map<String, dynamic> toJson() => {
     'birthDate': birthDate.toIso8601String(),
     'lastName': lastName,
-    'firstNamee': firstName,
+    'firstName': firstName,
     'phonNumber': phonNumber,
     'userGender': userGender.displayName,
     'userRoleEnum': userRoleEnum.displayName,

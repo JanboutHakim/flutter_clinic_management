@@ -38,8 +38,8 @@ class PatientModel extends UserModel {
   @override
   Map<String, dynamic> toJson() => {
     'birthDate': birthDate.toIso8601String(),
-    'firstName': lastName,
-    'lastName': firstName,
+    'firstName': firstName,
+    'lastName': lastName,
     'phonNumber': phonNumber,
     'userGender': userGender.displayName,
     'userRoleEnum': userRoleEnum.displayName,
