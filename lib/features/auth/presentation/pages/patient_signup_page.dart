@@ -47,7 +47,6 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
             children: [
               DropdownButtonFormField<GenderEnum>(
                 value: authRequest.gender ?? GenderEnum.male,
-
                 decoration: const InputDecoration(labelText: 'Gender'),
                 items:
                     GenderEnum.values
@@ -76,7 +75,6 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                           ? 'Date of Birth*'
                           : authRequest.date.toString(),
                   suffixIcon: const Icon(Icons.calendar_today),
-
                   hintText:
                       authRequest.date == null
                           ? 'Pick a date'
@@ -89,7 +87,6 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                   }
                   return null;
                 },
-                // initialValue: DateTime.now().toIso8601String(),
                 onTap: () async {
                   final DateTime? date = await showDatePicker(
                     initialDate: DateTime.now(),
