@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:doclib/core/constants/gender_enum.dart';
 import 'package:doclib/core/constants/user_role_enum.dart';
 import 'package:doclib/features/auth/data/models/Auth_model.dart';
@@ -41,6 +40,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Form(
+          autovalidateMode: AutovalidateMode.onUnfocus,
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -58,7 +58,10 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                         )
                         .toList(),
                 onChanged:
-                    (value) => setState(() => authRequest.gender = value),
+                    (value) => setState(() {
+                      authRequest.gender = value;
+                      _formKey.currentState!.validate();
+                    }),
                 validator: (value) => value == null ? 'Required' : null,
               ),
               const SizedBox(height: 12),
@@ -113,6 +116,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                   date != null
                       ? setState(() {
                         authRequest.date = date;
+                        _formKey.currentState!.validate();
                       })
                       : () {
                         authRequest.date = null;
@@ -174,9 +178,13 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                       email: authRequest.email!,
                       address: authRequest.address!,
                     );
-                    context.read<AuthBlocBloc>().add(
-                      AuthSignUpAsPatietn(patient),
-                    );
+                    // context.read<AuthBlocBloc>().add(
+                    //   AuthSignUpAsPatietn(patient),
+                    // );
+                    setState(() {
+                      authRequest = AuthRequest.nullvalues();
+                    });
+                    log(patient.toJson().toString());
                   }
                 },
                 child: const Text('Sign Up'),
