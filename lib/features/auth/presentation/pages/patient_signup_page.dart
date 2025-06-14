@@ -18,10 +18,25 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
   late AuthRequest authRequest;
   final _formKey = GlobalKey<FormState>();
 
+  late TextEditingController _firstNameController;
+  late TextEditingController _lastNameController;
+  late TextEditingController _phoneController;
+  late TextEditingController _usernameController;
+  late TextEditingController _passwordController;
+  late TextEditingController _addressController;
+  late TextEditingController _emailController;
+
   @override
   void initState() {
     super.initState();
     authRequest = AuthRequest.nullvalues();
+    _firstNameController = TextEditingController();
+    _lastNameController = TextEditingController();
+    _phoneController = TextEditingController();
+    _usernameController = TextEditingController();
+    _passwordController = TextEditingController();
+    _addressController = TextEditingController();
+    _emailController = TextEditingController();
   }
 
   @override
@@ -60,14 +75,14 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
           const SizedBox(height: 12),
           TextFormField(
             decoration: const InputDecoration(labelText: 'First name'),
-            onChanged: (value) => authRequest.firstName = value,
+            controller: _firstNameController,
             validator: (value) =>
                 value == null || value.isEmpty ? 'Required' : null,
           ),
           const SizedBox(height: 12),
           TextFormField(
             decoration: const InputDecoration(labelText: 'Last name'),
-            onChanged: (value) => authRequest.lastName = value,
+            controller: _lastNameController,
             validator: (value) =>
                 value == null || value.isEmpty ? 'Required' : null,
           ),
@@ -75,7 +90,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
           TextFormField(
             decoration: const InputDecoration(labelText: 'Phone'),
             keyboardType: TextInputType.phone,
-            onChanged: (value) => authRequest.phoneNumbre = value,
+            controller: _phoneController,
             validator: (value) =>
                 value == null || value.isEmpty ? 'Required' : null,
           ),
@@ -119,7 +134,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
 
           TextFormField(
             decoration: const InputDecoration(labelText: 'Username'),
-            onChanged: (value) => authRequest.username = value,
+            controller: _usernameController,
             validator: (value) =>
                 value == null || value.isEmpty ? 'Required' : null,
           ),
@@ -127,14 +142,14 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
           TextFormField(
             decoration: const InputDecoration(labelText: 'Password'),
             obscureText: true,
-            onChanged: (value) => authRequest.password = value,
+            controller: _passwordController,
             validator: (value) =>
                 value == null || value.isEmpty ? 'Required' : null,
           ),
           const SizedBox(height: 12),
           TextFormField(
             decoration: const InputDecoration(labelText: 'Address'),
-            onChanged: (value) => authRequest.address = value,
+            controller: _addressController,
             validator: (value) =>
                 value == null || value.isEmpty ? 'Required' : null,
           ),
@@ -142,7 +157,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
           TextFormField(
             decoration: const InputDecoration(labelText: 'Email'),
             keyboardType: TextInputType.emailAddress,
-            onChanged: (value) => authRequest.email = value,
+            controller: _emailController,
             validator: (value) =>
                 value == null || value.isEmpty ? 'Required' : null,
           ),
@@ -150,6 +165,14 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
           ElevatedButton(
             onPressed: () {
               if (_formKey.currentState?.validate() ?? false) {
+                authRequest
+                  ..firstName = _firstNameController.text
+                  ..lastName = _lastNameController.text
+                  ..phoneNumbre = _phoneController.text
+                  ..username = _usernameController.text
+                  ..password = _passwordController.text
+                  ..address = _addressController.text
+                  ..email = _emailController.text;
                 final patient = AuthRequest.signupAsPatient(
                   username: authRequest.username!,
                   password: authRequest.password!,
@@ -170,5 +193,17 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _firstNameController.dispose();
+    _lastNameController.dispose();
+    _phoneController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _addressController.dispose();
+    _emailController.dispose();
+    super.dispose();
   }
 }
