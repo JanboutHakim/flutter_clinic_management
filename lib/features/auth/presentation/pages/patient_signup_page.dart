@@ -21,6 +21,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
   void initState() {
     super.initState();
     authRequest = AuthRequest.nullvalues();
+    authRequest.gender = GenderEnum.male;
   }
 
   @override
