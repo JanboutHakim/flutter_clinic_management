@@ -25,6 +25,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/
 flutter_native_splash:
   color: "#42a5f5"  # Your brand color
   image: assets/images/new.png  # Your logo
