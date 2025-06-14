@@ -46,7 +46,8 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               DropdownButtonFormField<GenderEnum>(
-                value: authRequest.gender,
+                value: authRequest.gender ?? GenderEnum.male,
+
                 decoration: const InputDecoration(labelText: 'Gender'),
                 items:
                     GenderEnum.values
@@ -60,11 +61,57 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                 onChanged:
                     (value) => setState(() {
                       authRequest.gender = value;
-                      _formKey.currentState!.validate();
                     }),
-                validator: (value) => value == null ? 'Required' : null,
+                validator: (value) {
+                  return value == null ? 'Required' : null;
+                },
               ),
               const SizedBox(height: 12),
+              TextFormField(
+                autovalidateMode: AutovalidateMode.always,
+                readOnly: true,
+                decoration: InputDecoration(
+                  labelText:
+                      authRequest.date == null
+                          ? 'Date of Birth*'
+                          : authRequest.date.toString(),
+                  suffixIcon: const Icon(Icons.calendar_today),
+
+                  hintText:
+                      authRequest.date == null
+                          ? 'Pick a date'
+                          : authRequest.date!.toIso8601String(),
+                  errorStyle: const TextStyle(color: Colors.red),
+                ),
+                validator: (value) {
+                  if (authRequest.date == null) {
+                    return 'Date of birth is required';
+                  }
+                  return null;
+                },
+                // initialValue: DateTime.now().toIso8601String(),
+                onTap: () async {
+                  final DateTime? date = await showDatePicker(
+                    initialDate: DateTime.now(),
+                    context: context,
+                    firstDate: DateTime(1940),
+                    lastDate: DateTime.now(),
+                  );
+                  date != null
+                      ? setState(() {
+                        authRequest.date = date;
+                        // _formKey.currentState!.validate();
+                      })
+                      : () {
+                        authRequest.date = null;
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Please select your date of birth'),
+                          ),
+                        );
+                      };
+                },
+              ),
               TextFormField(
                 decoration: const InputDecoration(labelText: 'First name'),
                 onChanged: (value) => authRequest.firstName = value,
@@ -88,45 +135,6 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                 validator:
                     (value) =>
                         value == null || value.isEmpty ? 'Required' : null,
-              ),
-              TextFormField(
-                readOnly: true,
-                decoration: InputDecoration(
-                  labelText: 'Date of Birth*',
-                  suffixIcon: const Icon(Icons.calendar_today),
-                  hintText:
-                      authRequest.date == null
-                          ? 'Pick a date'
-                          : authRequest.date!.toIso8601String(),
-                  errorStyle: const TextStyle(color: Colors.red),
-                ),
-                validator: (value) {
-                  if (authRequest.date == null) {
-                    return 'Date of birth is required';
-                  }
-                  return null;
-                },
-                onTap: () async {
-                  final DateTime? date = await showDatePicker(
-                    initialDate: DateTime.now(),
-                    context: context,
-                    firstDate: DateTime(1940),
-                    lastDate: DateTime.now(),
-                  );
-                  date != null
-                      ? setState(() {
-                        authRequest.date = date;
-                        _formKey.currentState!.validate();
-                      })
-                      : () {
-                        authRequest.date = null;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Please select your date of birth'),
-                          ),
-                        );
-                      };
-                },
               ),
 
               TextFormField(
@@ -181,9 +189,9 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                     // context.read<AuthBlocBloc>().add(
                     //   AuthSignUpAsPatietn(patient),
                     // );
-                    setState(() {
-                      authRequest = AuthRequest.nullvalues();
-                    });
+                    // setState(() {
+                    //   authRequest = AuthRequest.nullvalues();
+                    // });
                     log(patient.toJson().toString());
                   }
                 },
