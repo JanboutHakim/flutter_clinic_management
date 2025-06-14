@@ -3,6 +3,7 @@ import 'package:doclib/core/constants/gender_enum.dart';
 import 'package:doclib/core/constants/user_role_enum.dart';
 import 'package:doclib/features/auth/data/models/Auth_model.dart';
 import 'package:doclib/features/auth/presentation/bloc/auth_bloc_bloc.dart';
+import 'package:doclib/features/auth/presentation/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -16,6 +17,8 @@ class PatientSignupPage extends StatefulWidget {
 class _PatientSignupPageState extends State<PatientSignupPage> {
   late AuthRequest authRequest;
   final _formKey = GlobalKey<FormState>();
+  bool _genderValid = true;
+  bool _dateValid = true;
 
   @override
   void initState() {
@@ -38,31 +41,57 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
           ).showSnackBar(SnackBar(content: Text(state.massege)));
         }
       },
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          autovalidateMode: AutovalidateMode.onUnfocus,
-          key: _formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
+      child: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/new.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            autovalidateMode: AutovalidateMode.onUnfocus,
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
               DropdownButtonFormField<GenderEnum>(
+                autovalidateMode: AutovalidateMode.always,
                 value: authRequest.gender ?? GenderEnum.male,
-                decoration: const InputDecoration(labelText: 'Gender'),
-                items:
-                    GenderEnum.values
-                        .map(
-                          (gender) => DropdownMenuItem(
-                            value: gender,
-                            child: Text(gender.name),
-                          ),
-                        )
-                        .toList(),
-                onChanged:
-                    (value) => setState(() {
-                      authRequest.gender = value;
-                    }),
+                decoration: InputDecoration(
+                  labelText: 'Gender',
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: _genderValid ? Colors.green : Colors.grey,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: _genderValid ? Colors.green : Colors.blue,
+                    ),
+                  ),
+                  errorBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
+                  ),
+                  focusedErrorBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
+                  ),
+                ),
+                items: GenderEnum.values
+                    .map(
+                      (gender) => DropdownMenuItem(
+                        value: gender,
+                        child: Text(gender.name),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (value) => setState(() {
+                  authRequest.gender = value;
+                  _genderValid = value != null;
+                }),
                 validator: (value) {
+                  _genderValid = value != null;
                   return value == null ? 'Required' : null;
                 },
               ),
@@ -71,19 +100,34 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                 autovalidateMode: AutovalidateMode.always,
                 readOnly: true,
                 decoration: InputDecoration(
-                  labelText:
-                      authRequest.date == null
-                          ? 'Date of Birth*'
-                          : authRequest.date.toString(),
+                  labelText: authRequest.date == null
+                      ? 'Date of Birth*'
+                      : authRequest.date.toString(),
                   suffixIcon: const Icon(Icons.calendar_today),
-                  hintText:
-                      authRequest.date == null
-                          ? 'Pick a date'
-                          : authRequest.date!.toIso8601String(),
+                  hintText: authRequest.date == null
+                      ? 'Pick a date'
+                      : authRequest.date!.toIso8601String(),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: _dateValid ? Colors.green : Colors.grey,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      color: _dateValid ? Colors.green : Colors.blue,
+                    ),
+                  ),
+                  errorBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
+                  ),
+                  focusedErrorBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.red),
+                  ),
                   errorStyle: const TextStyle(color: Colors.red),
                 ),
                 validator: (value) {
-                  if (authRequest.date == null) {
+                  _dateValid = authRequest.date != null;
+                  if (!_dateValid) {
                     return 'Date of birth is required';
                   }
                   return null;
@@ -95,78 +139,74 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                     firstDate: DateTime(1940),
                     lastDate: DateTime.now(),
                   );
-                  date != null
-                      ? setState(() {
-                        authRequest.date = date;
-                        // _formKey.currentState!.validate();
-                      })
-                      : () {
-                        authRequest.date = null;
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Please select your date of birth'),
-                          ),
-                        );
-                      };
+                  if (date != null) {
+                    setState(() {
+                      authRequest.date = date;
+                      _dateValid = true;
+                    });
+                  } else {
+                    setState(() {
+                      _dateValid = false;
+                      authRequest.date = null;
+                    });
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Please select your date of birth'),
+                      ),
+                    );
+                  }
                 },
               ),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'First name'),
+              CustomTextFormField(
+                label: 'First name',
                 onChanged: (value) => authRequest.firstName = value,
-                validator:
-                    (value) =>
-                        value == null || value.isEmpty ? 'Required' : null,
+                validator: (value) =>
+                    value == null || value.isEmpty ? 'Required' : null,
               ),
               const SizedBox(height: 12),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Last name'),
+              CustomTextFormField(
+                label: 'Last name',
                 onChanged: (value) => authRequest.lastName = value,
-                validator:
-                    (value) =>
-                        value == null || value.isEmpty ? 'Required' : null,
+                validator: (value) =>
+                    value == null || value.isEmpty ? 'Required' : null,
               ),
               const SizedBox(height: 12),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Phone'),
+              CustomTextFormField(
+                label: 'Phone',
                 keyboardType: TextInputType.phone,
                 onChanged: (value) => authRequest.phoneNumbre = value,
-                validator:
-                    (value) =>
-                        value == null || value.isEmpty ? 'Required' : null,
+                validator: (value) =>
+                    value == null || value.isEmpty ? 'Required' : null,
               ),
 
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Username'),
+              CustomTextFormField(
+                label: 'Username',
                 onChanged: (value) => authRequest.username = value,
-                validator:
-                    (value) =>
-                        value == null || value.isEmpty ? 'Required' : null,
+                validator: (value) =>
+                    value == null || value.isEmpty ? 'Required' : null,
               ),
               const SizedBox(height: 12),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Password'),
+              CustomTextFormField(
+                label: 'Password',
                 obscureText: true,
                 onChanged: (value) => authRequest.password = value,
-                validator:
-                    (value) =>
-                        value == null || value.isEmpty ? 'Required' : null,
+                validator: (value) =>
+                    value == null || value.isEmpty ? 'Required' : null,
               ),
               const SizedBox(height: 12),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Address'),
+              CustomTextFormField(
+                label: 'Address',
                 onChanged: (value) => authRequest.address = value,
-                validator:
-                    (value) =>
-                        value == null || value.isEmpty ? 'Required' : null,
+                validator: (value) =>
+                    value == null || value.isEmpty ? 'Required' : null,
               ),
               const SizedBox(height: 12),
-              TextFormField(
-                decoration: const InputDecoration(labelText: 'Email'),
+              CustomTextFormField(
+                label: 'Email',
                 keyboardType: TextInputType.emailAddress,
                 onChanged: (value) => authRequest.email = value,
-                validator:
-                    (value) =>
-                        value == null || value.isEmpty ? 'Required' : null,
+                validator: (value) =>
+                    value == null || value.isEmpty ? 'Required' : null,
               ),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -184,13 +224,9 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                       email: authRequest.email!,
                       address: authRequest.address!,
                     );
-                    // context.read<AuthBlocBloc>().add(
-                    //   AuthSignUpAsPatietn(patient),
-                    // );
-                    // setState(() {
-                    //   authRequest = AuthRequest.nullvalues();
-                    // });
-                    log(patient.toJson().toString());
+                    context.read<AuthBlocBloc>().add(
+                      AuthSignUpAsPatietn(patient),
+                    );
                   }
                 },
                 child: const Text('Sign Up'),
