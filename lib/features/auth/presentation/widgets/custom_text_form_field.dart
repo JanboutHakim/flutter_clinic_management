@@ -25,9 +25,12 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 
   String? _validate(String? value) {
     final res = widget.validator?.call(value);
-    setState(() {
-      _isValid = res == null;
-    });
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) => setState(() {
+        _isValid = res == null;
+      }),
+    );
+
     return res;
   }
 
@@ -40,14 +43,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       decoration: InputDecoration(
         labelText: widget.label,
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: _isValid ? Colors.green : Colors.grey,
-          ),
+          borderSide: BorderSide(color: _isValid ? Colors.green : Colors.grey),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: _isValid ? Colors.green : Colors.blue,
-          ),
+          borderSide: BorderSide(color: _isValid ? Colors.green : Colors.blue),
         ),
         errorBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.red),
