@@ -10,6 +10,8 @@ class DoctorModel extends UserModel {
   final List<Object> patients;
   final int yearsOfExperience;
   DoctorModel({
+    required super.password,
+    required super.userName,
     super.id,
     required this.yearsOfExperience,
     required this.spec,
@@ -25,6 +27,7 @@ class DoctorModel extends UserModel {
   });
 
   factory DoctorModel.fromJson(Map<String, dynamic> json) => DoctorModel(
+    userName: json['username'],
     yearsOfExperience: json["yearsOfExperience"],
     spec: json['spec'],
     address: json['address'],
@@ -41,12 +44,12 @@ class DoctorModel extends UserModel {
     ),
     token: json['token'],
     id: json["id"],
+    password: json["password"],
   );
 
   @override
   Map<String, dynamic> toJson() => {
     'birthDate': birthDate.toIso8601String(),
-
     'Name': fullName,
     'phonNumber': phonNumber,
     'userGender': userGender.displayName,
@@ -72,6 +75,7 @@ class DoctorModel extends UserModel {
       phonNumber: phonNumber,
       userRoleEnum: userRoleEnum,
       userGender: userGender,
+      userName: userName,
     );
   }
 }

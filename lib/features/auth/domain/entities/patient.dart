@@ -1,10 +1,11 @@
 import 'package:doclib/features/auth/domain/entities/user.dart';
 
 class Patient extends User {
-  final List<Object> appointments;
-  final List<Object> drugs;
-  final List<Object> documents;
+  final List<String?>? appointments;
+  final List<String?>? drugs;
+  final List<String?>? documents;
   Patient({
+    required super.userName,
     super.id,
     this.appointments = const [],
     this.documents = const [],

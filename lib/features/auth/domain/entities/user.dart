@@ -4,6 +4,7 @@ import 'package:doclib/core/constants/user_role_enum.dart';
 class User {
   String? id;
   String? token;
+  final String userName;
   final String fullName;
   final String phonNumber;
   final GenderEnum userGender;
@@ -12,6 +13,7 @@ class User {
   User({
     this.id,
     this.token,
+    required this.userName,
     required this.fullName,
     required this.birthDate,
     required this.phonNumber,
