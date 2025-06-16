@@ -2,7 +2,6 @@ import 'package:doclib/core/constants/gender_enum.dart';
 import 'package:doclib/core/constants/user_role_enum.dart';
 import 'package:doclib/features/auth/data/models/Auth_model.dart';
 import 'package:doclib/features/auth/presentation/bloc/auth_bloc_bloc.dart';
-import 'package:doclib/features/auth/presentation/widgets/dob_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
