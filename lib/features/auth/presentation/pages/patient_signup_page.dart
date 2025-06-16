@@ -2,6 +2,7 @@ import 'package:doclib/core/constants/gender_enum.dart';
 import 'package:doclib/core/constants/user_role_enum.dart';
 import 'package:doclib/features/auth/data/models/Auth_model.dart';
 import 'package:doclib/features/auth/presentation/bloc/auth_bloc_bloc.dart';
+import 'package:doclib/features/auth/presentation/widgets/dob_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -20,8 +21,8 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
   bool _dateValid = true;
 
   // Controllers for all text fields to enable easier management and clearing
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _fullNameController = TextEditingController();
+  // final TextEditingController _lastNameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -35,8 +36,8 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
 
   @override
   void dispose() {
-    _firstNameController.dispose();
-    _lastNameController.dispose();
+    _fullNameController.dispose();
+
     _phoneController.dispose();
     _usernameController.dispose();
     _passwordController.dispose();
@@ -47,8 +48,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
 
   // Clears all controllers and resets the form
   void _clearControllers() {
-    _firstNameController.clear();
-    _lastNameController.clear();
+    _fullNameController.clear();
     _phoneController.clear();
     _usernameController.clear();
     _passwordController.clear();
@@ -82,7 +82,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/new.png'),
-            fit: BoxFit.cover,
+            fit: BoxFit.contain,
           ),
         ),
         child: SingleChildScrollView(
@@ -91,7 +91,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
             // autovalidateMode: AutovalidateMode.onUnfocus,
             key: _formKey,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 DropdownButtonFormField<GenderEnum>(
                   value: _selectedGender,
@@ -123,7 +123,8 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                             ),
                           )
                           .toList(),
-                  onChanged: (value) => setState(() {
+                  onChanged:
+                      (value) => setState(() {
                         _selectedGender = value;
                         _genderValid = value != null;
                       }),
@@ -133,17 +134,20 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                   },
                 ),
                 const SizedBox(height: 12),
+
                 TextFormField(
                   autovalidateMode: AutovalidateMode.always,
                   readOnly: true,
                   decoration: InputDecoration(
-                    labelText: _selectedDate == null
-                        ? 'Date of Birth*'
-                        : _selectedDate.toString(),
+                    labelText:
+                        _selectedDate == null
+                            ? 'Date of Birth*'
+                            : _selectedDate.toString(),
                     suffixIcon: const Icon(Icons.calendar_today),
-                    hintText: _selectedDate == null
-                        ? 'Pick a date'
-                        : _selectedDate!.toIso8601String(),
+                    hintText:
+                        _selectedDate == null
+                            ? 'Pick a date'
+                            : _selectedDate!.toIso8601String(),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: _dateValid ? Colors.green : Colors.grey,
@@ -194,20 +198,22 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                     }
                   },
                 ),
+                // DatePickerField(sellectedDate: _selectedDate),
                 TextFormField(
-                  controller: _firstNameController,
+                  controller: _fullNameController,
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   decoration: InputDecoration(
-                    labelText: 'First name',
+                    labelText: 'fullName',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
                       borderSide: BorderSide(
-                        color: _firstNameController.text.isEmpty
-                            ? Colors.grey
-                            : Colors.green,
+                        color:
+                            _fullNameController.text.isEmpty
+                                ? Colors.grey
+                                : Colors.green,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -216,35 +222,11 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                     ),
                   ),
                   validator:
-                      (value) => value == null || value.isEmpty ? 'Required' : null,
+                      (value) =>
+                          value == null || value.isEmpty ? 'Required' : null,
                   onChanged: (_) => setState(() {}),
                 ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _lastNameController,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
-                  decoration: InputDecoration(
-                    labelText: 'Last name',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: BorderSide(
-                        color: _lastNameController.text.isEmpty
-                            ? Colors.grey
-                            : Colors.green,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: const BorderSide(color: Colors.green),
-                    ),
-                  ),
-                  validator:
-                      (value) => value == null || value.isEmpty ? 'Required' : null,
-                  onChanged: (_) => setState(() {}),
-                ),
+
                 const SizedBox(height: 12),
                 TextFormField(
                   controller: _phoneController,
@@ -258,9 +240,10 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
                       borderSide: BorderSide(
-                        color: _phoneController.text.isEmpty
-                            ? Colors.grey
-                            : Colors.green,
+                        color:
+                            _phoneController.text.isEmpty
+                                ? Colors.grey
+                                : Colors.green,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -269,7 +252,8 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                     ),
                   ),
                   validator:
-                      (value) => value == null || value.isEmpty ? 'Required' : null,
+                      (value) =>
+                          value == null || value.isEmpty ? 'Required' : null,
                   onChanged: (_) => setState(() {}),
                 ),
 
@@ -284,9 +268,10 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
                       borderSide: BorderSide(
-                        color: _usernameController.text.isEmpty
-                            ? Colors.grey
-                            : Colors.green,
+                        color:
+                            _usernameController.text.isEmpty
+                                ? Colors.grey
+                                : Colors.green,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -295,7 +280,8 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                     ),
                   ),
                   validator:
-                      (value) => value == null || value.isEmpty ? 'Required' : null,
+                      (value) =>
+                          value == null || value.isEmpty ? 'Required' : null,
                   onChanged: (_) => setState(() {}),
                 ),
                 const SizedBox(height: 12),
@@ -311,9 +297,10 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
                       borderSide: BorderSide(
-                        color: _passwordController.text.isEmpty
-                            ? Colors.grey
-                            : Colors.green,
+                        color:
+                            _passwordController.text.isEmpty
+                                ? Colors.grey
+                                : Colors.green,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -322,7 +309,8 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                     ),
                   ),
                   validator:
-                      (value) => value == null || value.isEmpty ? 'Required' : null,
+                      (value) =>
+                          value == null || value.isEmpty ? 'Required' : null,
                   onChanged: (_) => setState(() {}),
                 ),
                 const SizedBox(height: 12),
@@ -337,9 +325,10 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
                       borderSide: BorderSide(
-                        color: _addressController.text.isEmpty
-                            ? Colors.grey
-                            : Colors.green,
+                        color:
+                            _addressController.text.isEmpty
+                                ? Colors.grey
+                                : Colors.green,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -348,7 +337,8 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                     ),
                   ),
                   validator:
-                      (value) => value == null || value.isEmpty ? 'Required' : null,
+                      (value) =>
+                          value == null || value.isEmpty ? 'Required' : null,
                   onChanged: (_) => setState(() {}),
                 ),
                 const SizedBox(height: 12),
@@ -364,9 +354,10 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30),
                       borderSide: BorderSide(
-                        color: _emailController.text.isEmpty
-                            ? Colors.grey
-                            : Colors.green,
+                        color:
+                            _emailController.text.isEmpty
+                                ? Colors.grey
+                                : Colors.green,
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -375,7 +366,8 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                     ),
                   ),
                   validator:
-                      (value) => value == null || value.isEmpty ? 'Required' : null,
+                      (value) =>
+                          value == null || value.isEmpty ? 'Required' : null,
                   onChanged: (_) => setState(() {}),
                 ),
                 const SizedBox(height: 20),
@@ -385,9 +377,9 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                       final patient = AuthRequest.signupAsPatient(
                         username: _usernameController.text,
                         password: _passwordController.text,
-                        firstName: _firstNameController.text,
+
                         gender: _selectedGender!,
-                        lastName: _lastNameController.text,
+                        fullName: _fullNameController.text,
                         phoneNumber: _phoneController.text,
                         date: _selectedDate!,
                         role: UserRoleEnum.patient,

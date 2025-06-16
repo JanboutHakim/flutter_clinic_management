@@ -11,8 +11,7 @@ class PatientModel extends UserModel {
     super.id,
     super.token,
     required super.birthDate,
-    required super.lastName,
-    required super.firstName,
+    required super.fullName,
     required super.phonNumber,
     required super.userGender,
     required super.userRoleEnum,
@@ -25,8 +24,7 @@ class PatientModel extends UserModel {
     drugs: (json['drugs'] as List<Object>? ?? []).toList(),
     documents: (json['documents'] as List<Object>? ?? []).toList(),
     birthDate: DateTime.parse(json['birthDate']),
-    lastName: json['lastName'],
-    firstName: json['firstName'],
+    fullName: json['fullName'],
     phonNumber: json['phonNumber'],
     userGender: GenderEnum.values.firstWhere(
       (e) => e.name == json['userGender'],
@@ -40,8 +38,7 @@ class PatientModel extends UserModel {
   @override
   Map<String, dynamic> toJson() => {
     'birthDate': birthDate.toIso8601String(),
-    'firstName': firstName,
-    'lastName': lastName,
+    'Name': fullName,
     'phonNumber': phonNumber,
     'userGender': userGender.displayName,
     'userRoleEnum': userRoleEnum.displayName,
@@ -56,9 +53,8 @@ class PatientModel extends UserModel {
       appointments: List<Object>.from(appointments),
       drugs: List<Object>.from(drugs),
       documents: List<Object>.from(documents),
-      firstName: firstName,
+      fullName: fullName,
       birthDate: birthDate,
-      lastName: lastName,
       phonNumber: phonNumber,
       userRoleEnum: userRoleEnum,
       userGender: userGender,
@@ -68,6 +64,6 @@ class PatientModel extends UserModel {
 
   @override
   String toString() {
-    return 'PatientModel(appointments: $appointments, drugs: $drugs, documents: $documents, token: $token, birthDate: $birthDate, lastName: $lastName, firstName: $firstName, phonNumber: $phonNumber, userGender: $userGender, userRoleEnum: $userRoleEnum)';
+    return 'PatientModel(appointments: $appointments, drugs: $drugs, documents: $documents, token: $token, birthDate: $birthDate, firstName: $fullName, phonNumber: $phonNumber, userGender: $userGender, userRoleEnum: $userRoleEnum)';
   }
 }

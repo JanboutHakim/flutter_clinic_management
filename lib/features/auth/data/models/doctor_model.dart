@@ -18,8 +18,7 @@ class DoctorModel extends UserModel {
     required this.patients,
     super.token,
     required super.birthDate,
-    required super.lastName,
-    required super.firstName,
+    required super.fullName,
     required super.phonNumber,
     required super.userGender,
     required super.userRoleEnum,
@@ -32,8 +31,7 @@ class DoctorModel extends UserModel {
     appointments: (json['appointments'] as List<Object>? ?? []).toList(),
     patients: (json['patients'] as List<Object>? ?? []).toList(),
     birthDate: DateTime.parse(json['birthDate']),
-    lastName: json['lastName'],
-    firstName: json['firstName'],
+    fullName: json['Name'],
     phonNumber: json['phonNumber'],
     userGender: GenderEnum.values.firstWhere(
       (e) => e.name == json['userGender'],
@@ -48,8 +46,8 @@ class DoctorModel extends UserModel {
   @override
   Map<String, dynamic> toJson() => {
     'birthDate': birthDate.toIso8601String(),
-    'lastName': lastName,
-    'firstName': firstName,
+
+    'Name': fullName,
     'phonNumber': phonNumber,
     'userGender': userGender.displayName,
     'userRoleEnum': userRoleEnum.displayName,
@@ -70,8 +68,7 @@ class DoctorModel extends UserModel {
       patients: List<Object>.from(patients),
       token: token,
       birthDate: birthDate,
-      lastName: lastName,
-      firstName: firstName,
+      fullName: fullName,
       phonNumber: phonNumber,
       userRoleEnum: userRoleEnum,
       userGender: userGender,

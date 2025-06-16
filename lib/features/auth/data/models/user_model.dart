@@ -8,8 +8,7 @@ abstract class UserModel extends User {
   UserModel({
     super.id,
     required super.birthDate,
-    required super.lastName,
-    required super.firstName,
+    required super.fullName,
     required super.phonNumber,
     required super.userGender,
     required super.userRoleEnum,
@@ -18,8 +17,7 @@ abstract class UserModel extends User {
   Map<String, dynamic> toJson() {
     return {
       'birthDate': birthDate.toIso8601String(),
-      'lastName': lastName,
-      'firstName': firstName,
+      'Name': fullName,
       'phonNumber': phonNumber,
       'userGender': userGender.displayName,
       'userRoleEnum': userRoleEnum.displayName,

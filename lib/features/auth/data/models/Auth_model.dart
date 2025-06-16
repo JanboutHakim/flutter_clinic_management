@@ -10,8 +10,7 @@ final AuthRequest ta = AuthRequest.nullvalues();
 class AuthRequest {
   String? username;
   String? password;
-  String? lastName;
-  String? firstName;
+  String? fullName;
   UserRoleEnum? role;
   DateTime? date;
   String? spec;
@@ -26,8 +25,7 @@ class AuthRequest {
     this.gender,
     this.address,
     this.date,
-    this.lastName,
-    this.firstName,
+    this.fullName,
     this.phoneNumbre,
     this.role,
     this.spec,
@@ -44,9 +42,8 @@ class AuthRequest {
   factory AuthRequest.signupAsDoctor({
     required String username,
     required String password,
-    required String firstName,
+    required String fullName,
     required GenderEnum gender,
-    required String lastName,
     required String phoneNumber,
     required DateTime date,
     required String address,
@@ -56,11 +53,10 @@ class AuthRequest {
     return AuthRequest._(
       username: username,
       password: password,
-      firstName: firstName,
+      fullName: fullName,
       address: address,
       date: date,
       gender: gender,
-      lastName: lastName,
       phoneNumbre: phoneNumber,
       role: role,
       spec: spec,
@@ -70,9 +66,8 @@ class AuthRequest {
   factory AuthRequest.signupAsPatient({
     required String username,
     required String password,
-    required String firstName,
+    required String fullName,
     required GenderEnum gender,
-    required String lastName,
     required String phoneNumber,
     required DateTime date,
     required UserRoleEnum role,
@@ -82,10 +77,9 @@ class AuthRequest {
     return AuthRequest._(
       username: username,
       password: password,
-      firstName: firstName,
+      fullName: fullName,
       date: date,
       gender: gender,
-      lastName: lastName,
       phoneNumbre: phoneNumber,
       role: role,
       email: email,
@@ -95,9 +89,8 @@ class AuthRequest {
   AuthRequest copyWith({
     String? username,
     String? password,
-    String? firstName,
     GenderEnum? gender,
-    String? lastName,
+    String? fullName,
     String? phoneNumbre,
     DateTime? date,
     UserRoleEnum? role,
@@ -105,9 +98,8 @@ class AuthRequest {
     return AuthRequest._(
       username: username ?? this.username,
       password: password ?? this.password,
-      firstName: firstName ?? this.firstName,
+      fullName: fullName ?? this.fullName,
       gender: gender ?? this.gender,
-      lastName: lastName ?? this.lastName,
       phoneNumbre: phoneNumbre ?? this.phoneNumbre,
       date: date ?? this.date,
       role: role ?? this.role,
@@ -118,12 +110,12 @@ class AuthRequest {
     final Map<String, dynamic> data = {
       'username': username,
       'password': password,
-      if (firstName != null) 'firstName': firstName,
-      if (lastName != null) 'lastName': lastName,
-      if (role != null) 'role': role?.name,
+      if (fullName != null) 'name': fullName,
+      if (role != null) 'role': role?.displayName,
       if (date != null) 'DOB': date?.toIso8601String().split('T')[0],
-      if (gender != null) 'gender': gender?.name,
+      if (gender != null) 'gender': gender?.displayName,
       if (phoneNumbre != null) 'phoneNumber': phoneNumbre,
+      if (email != null) 'email': email,
     };
 
     if (role == UserRoleEnum.doctor) {

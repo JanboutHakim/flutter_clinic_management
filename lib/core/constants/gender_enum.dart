@@ -4,9 +4,9 @@ extension GenderExtension on GenderEnum {
   String get displayName {
     switch (this) {
       case GenderEnum.male:
-        return 'Male';
+        return 'MALE';
       case GenderEnum.female:
-        return 'Female';
+        return 'FEMALE';
     }
   }
 

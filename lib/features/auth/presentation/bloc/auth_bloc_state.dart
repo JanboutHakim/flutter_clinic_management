@@ -20,5 +20,9 @@ final class AuthAuthenticated extends AuthBlocState {
 
 final class AuthFailed extends AuthBlocState {
   final String massege;
-  const AuthFailed(this.massege);
+  final DateTime time = DateTime.now();
+  AuthFailed(this.massege);
+  @override
+  // TODO: implement props
+  List<Object> get props => [massege, time];
 }

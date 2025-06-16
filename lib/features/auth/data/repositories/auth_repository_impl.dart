@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:doclib/core/errors/failure.dart';
 import 'package:doclib/features/auth/data/datasources/auth_patient_remote_data_source.dart';
@@ -31,8 +33,11 @@ class AuthRepositoryImpl implements AuthRepository {
       final entity = await authRemoteDataSourece.register(
         authRequest: authRequest,
       );
+      log(entity.runtimeType.toString());
       return right(entity.toEntity());
-    } catch (e) {
+    } catch (e, stack) {
+      log(stack.toString());
+      // log(entity.runtimeType.toString());
       return left(ServerFailure());
     }
   }
