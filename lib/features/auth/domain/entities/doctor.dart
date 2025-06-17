@@ -8,6 +8,7 @@ class Doctor extends User {
   final List<Object> patients;
   final int yearsOfExperience;
   Doctor({
+    required super.userName,
     super.id,
     required this.yearsOfExperience,
     super.token,
@@ -15,9 +16,8 @@ class Doctor extends User {
     required this.address,
     this.appointments = const [],
     this.patients = const [],
-    required super.firstName,
+    required super.fullName,
     required super.birthDate,
-    required super.lastName,
     required super.phonNumber,
     required super.userRoleEnum,
     required super.userGender,

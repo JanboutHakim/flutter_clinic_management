@@ -1,9 +1,7 @@
-import 'dart:developer';
 import 'package:doclib/core/constants/gender_enum.dart';
 import 'package:doclib/core/constants/user_role_enum.dart';
 import 'package:doclib/features/auth/data/models/Auth_model.dart';
 import 'package:doclib/features/auth/presentation/bloc/auth_bloc_bloc.dart';
-import 'package:doclib/features/auth/presentation/widgets/custom_text_form_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,16 +13,53 @@ class PatientSignupPage extends StatefulWidget {
 }
 
 class _PatientSignupPageState extends State<PatientSignupPage> {
-  late AuthRequest authRequest;
+  GenderEnum? _selectedGender = GenderEnum.male;
+  DateTime? _selectedDate;
   final _formKey = GlobalKey<FormState>();
   bool _genderValid = true;
   bool _dateValid = true;
 
+  // Controllers for all text fields to enable easier management and clearing
+  final TextEditingController _fullNameController = TextEditingController();
+  // final TextEditingController _lastNameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
-    authRequest = AuthRequest.nullvalues();
-    authRequest.gender = GenderEnum.male;
+  }
+
+  @override
+  void dispose() {
+    _fullNameController.dispose();
+
+    _phoneController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _addressController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  // Clears all controllers and resets the form
+  void _clearControllers() {
+    setState(() {
+      _fullNameController.clear();
+      _phoneController.clear();
+      _usernameController.clear();
+      _passwordController.clear();
+      _addressController.clear();
+      _emailController.clear();
+      _formKey.currentState?.reset();
+      _selectedGender = GenderEnum.male;
+      _selectedDate = null;
+      _dateValid = true;
+      _genderValid = true;
+    });
   }
 
   @override
@@ -35,6 +70,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Registered successfully')),
           );
+          _clearControllers();
         } else if (state is AuthFailed) {
           ScaffoldMessenger.of(
             context,
@@ -45,7 +81,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/new.png'),
-            fit: BoxFit.cover,
+            fit: BoxFit.contain,
           ),
         ),
         child: SingleChildScrollView(
@@ -54,11 +90,10 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
             // autovalidateMode: AutovalidateMode.onUnfocus,
             key: _formKey,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 DropdownButtonFormField<GenderEnum>(
-                  // autovalidateMode: AutovalidateMode.always,
-                  value: authRequest.gender ?? GenderEnum.male,
+                  value: _selectedGender,
                   decoration: InputDecoration(
                     labelText: 'Gender',
                     enabledBorder: OutlineInputBorder(
@@ -89,7 +124,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                           .toList(),
                   onChanged:
                       (value) => setState(() {
-                        authRequest.gender = value;
+                        _selectedGender = value;
                         _genderValid = value != null;
                       }),
                   validator: (value) {
@@ -98,19 +133,20 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                   },
                 ),
                 const SizedBox(height: 12),
+
                 TextFormField(
                   autovalidateMode: AutovalidateMode.always,
                   readOnly: true,
                   decoration: InputDecoration(
                     labelText:
-                        authRequest.date == null
+                        _selectedDate == null
                             ? 'Date of Birth*'
-                            : authRequest.date.toString(),
+                            : _selectedDate.toString(),
                     suffixIcon: const Icon(Icons.calendar_today),
                     hintText:
-                        authRequest.date == null
+                        _selectedDate == null
                             ? 'Pick a date'
-                            : authRequest.date!.toIso8601String(),
+                            : _selectedDate!.toIso8601String(),
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                         color: _dateValid ? Colors.green : Colors.grey,
@@ -130,7 +166,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                     errorStyle: const TextStyle(color: Colors.red),
                   ),
                   validator: (value) {
-                    _dateValid = authRequest.date != null;
+                    _dateValid = _selectedDate != null;
                     if (!_dateValid) {
                       return 'Date of birth is required';
                     }
@@ -145,13 +181,13 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                     );
                     if (date != null) {
                       setState(() {
-                        authRequest.date = date;
+                        _selectedDate = date;
                         _dateValid = true;
                       });
                     } else {
                       setState(() {
                         _dateValid = false;
-                        authRequest.date = null;
+                        _selectedDate = null;
                       });
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
@@ -161,79 +197,191 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                     }
                   },
                 ),
-                CustomTextFormField(
-                  label: 'First name',
-                  onChanged: (value) => authRequest.firstName = value,
-                  validator:
-                      (value) =>
-                          value == null || value.isEmpty ? 'Required' : null,
-                ),
-                const SizedBox(height: 12),
-                CustomTextFormField(
-                  label: 'Last name',
-                  onChanged: (value) => authRequest.lastName = value,
-                  validator:
-                      (value) =>
-                          value == null || value.isEmpty ? 'Required' : null,
-                ),
-                const SizedBox(height: 12),
-                CustomTextFormField(
-                  label: 'Phone',
-                  keyboardType: TextInputType.phone,
-                  onChanged: (value) => authRequest.phoneNumbre = value,
+                // DatePickerField(sellectedDate: _selectedDate),
+                TextFormField(
+                  controller: _fullNameController,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  decoration: InputDecoration(
+                    labelText: 'fullName',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide(
+                        color:
+                            _fullNameController.text.isEmpty
+                                ? Colors.grey
+                                : Colors.green,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: const BorderSide(color: Colors.green),
+                    ),
+                  ),
                   validator:
                       (value) =>
                           value == null || value.isEmpty ? 'Required' : null,
                 ),
 
-                CustomTextFormField(
-                  label: 'Username',
-                  onChanged: (value) => authRequest.username = value,
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: _phoneController,
+                  keyboardType: TextInputType.phone,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  decoration: InputDecoration(
+                    labelText: 'Phone',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide(
+                        color:
+                            _phoneController.text.isEmpty
+                                ? Colors.grey
+                                : Colors.green,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: const BorderSide(color: Colors.green),
+                    ),
+                  ),
                   validator:
                       (value) =>
                           value == null || value.isEmpty ? 'Required' : null,
                 ),
+
+                TextFormField(
+                  controller: _usernameController,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  decoration: InputDecoration(
+                    labelText: 'Username',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide(
+                        color:
+                            _usernameController.text.isEmpty
+                                ? Colors.grey
+                                : Colors.green,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: const BorderSide(color: Colors.green),
+                    ),
+                  ),
+                  validator:
+                      (value) =>
+                          value == null || value.isEmpty ? 'Required' : null,
+                  onChanged: (_) => setState(() {}),
+                ),
                 const SizedBox(height: 12),
-                CustomTextFormField(
-                  label: 'Password',
+                TextFormField(
+                  controller: _passwordController,
                   obscureText: true,
-                  onChanged: (value) => authRequest.password = value,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide(
+                        color:
+                            _passwordController.text.isEmpty
+                                ? Colors.grey
+                                : Colors.green,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: const BorderSide(color: Colors.green),
+                    ),
+                  ),
                   validator:
                       (value) =>
                           value == null || value.isEmpty ? 'Required' : null,
+                  onChanged: (_) => setState(() {}),
                 ),
                 const SizedBox(height: 12),
-                CustomTextFormField(
-                  label: 'Address',
-                  onChanged: (value) => authRequest.address = value,
+                TextFormField(
+                  controller: _addressController,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  decoration: InputDecoration(
+                    labelText: 'Address',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide(
+                        color:
+                            _addressController.text.isEmpty
+                                ? Colors.grey
+                                : Colors.green,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: const BorderSide(color: Colors.green),
+                    ),
+                  ),
                   validator:
                       (value) =>
                           value == null || value.isEmpty ? 'Required' : null,
+                  onChanged: (_) => setState(() {}),
                 ),
                 const SizedBox(height: 12),
-                CustomTextFormField(
-                  label: 'Email',
+                TextFormField(
+                  controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
-                  onChanged: (value) => authRequest.email = value,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  decoration: InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: BorderSide(
+                        color:
+                            _emailController.text.isEmpty
+                                ? Colors.grey
+                                : Colors.green,
+                      ),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30),
+                      borderSide: const BorderSide(color: Colors.green),
+                    ),
+                  ),
                   validator:
                       (value) =>
                           value == null || value.isEmpty ? 'Required' : null,
+                  onChanged: (_) => setState(() {}),
                 ),
                 const SizedBox(height: 20),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState?.validate() ?? false) {
                       final patient = AuthRequest.signupAsPatient(
-                        username: authRequest.username!,
-                        password: authRequest.password!,
-                        firstName: authRequest.firstName!,
-                        gender: authRequest.gender!,
-                        lastName: authRequest.lastName!,
-                        phoneNumber: authRequest.phoneNumbre!,
-                        date: authRequest.date!,
+                        username: _usernameController.text,
+                        password: _passwordController.text,
+
+                        gender: _selectedGender!,
+                        fullName: _fullNameController.text,
+                        phoneNumber: _phoneController.text,
+                        date: _selectedDate!,
                         role: UserRoleEnum.patient,
-                        email: authRequest.email!,
-                        address: authRequest.address!,
+                        email: _emailController.text,
+                        address: _addressController.text,
                       );
                       context.read<AuthBlocBloc>().add(
                         AuthSignUpAsPatietn(patient),

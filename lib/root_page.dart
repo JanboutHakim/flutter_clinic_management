@@ -1,7 +1,6 @@
 import 'package:doclib/core/navigation/pagesbloc/bloc/pages_bloc.dart';
 import 'package:doclib/features/appointments/presentation/pages/appointments_page.dart';
 import 'package:doclib/features/auth/presentation/bloc/auth_bloc_bloc.dart';
-import 'package:doclib/features/auth/presentation/pages/Auth_secreen.dart';
 import 'package:doclib/features/auth/presentation/pages/patient_signup_page.dart';
 import 'package:doclib/features/drugs/presentation/pages/drugs_pages.dart';
 import 'package:doclib/features/home/presentation/pages/home_page.dart';
@@ -36,7 +35,7 @@ class RootPage extends StatelessWidget {
               actions: [
                 BlocBuilder<AuthBlocBloc, AuthBlocState>(
                   builder: (context, state) {
-                    return state is AuthUnAuthenticated
+                    return state is AuthAuthenticated
                         ? const Text("login")
                         : const Text("notlogin");
                   },

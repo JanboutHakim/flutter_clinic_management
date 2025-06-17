@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:doclib/core/errors/exeptions.dart';
 import 'package:http/http.dart' as http;
 
@@ -7,9 +8,14 @@ typedef JsonFactory<T> = T Function(Map<String, dynamic> json);
 T handleResponse<T>(http.Response response, JsonFactory<T> fromJson) {
   final decoded = jsonDecode(response.body);
 
+  log("start handlerwith status code $decoded");
   switch (response.statusCode) {
     case 200:
+      print("asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf");
+      log("200  ok ${fromJson(decoded).toString()}");
+      return fromJson(decoded);
     case 201:
+      log("201 ok ${fromJson(decoded).toString()}");
       return fromJson(decoded);
 
     case 400:
@@ -26,10 +32,8 @@ T handleResponse<T>(http.Response response, JsonFactory<T> fromJson) {
       );
 
     case 404:
-      throw NotFoundException(
-        decoded['message'] ?? 'Resource not found',
-        decoded['details']?.toString(),
-      );
+      log("throw");
+      throw NotFoundException('Resource not found');
 
     case 500:
     case 502:
@@ -38,6 +42,8 @@ T handleResponse<T>(http.Response response, JsonFactory<T> fromJson) {
       throw ServerException(decoded['message'] ?? 'Server error');
 
     default:
-      throw Exception(decoded['message'] ?? 'Unknown error');
+      log("throw not found");
+      throw Exception('root Unknown error');
   }
+  // log(message);
 }
