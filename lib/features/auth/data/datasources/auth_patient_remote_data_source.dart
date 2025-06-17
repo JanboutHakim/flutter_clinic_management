@@ -25,27 +25,27 @@ class AuthRemoteDataSoureceImpl implements AuthRemoteDataSource {
     // print("fofofofofofofofofofofo");
     final url = Uri.parse('http://192.168.137.1:8080/auth/register');
     final body = authRequest.toJson();
-    // final response = await client.post(
-    //   url,
-    //   headers: {'Content-Type': 'application/json'},
-    //   body: jsonEncode(body),
-    // );
-    final data = {
-      "id": "20",
-      "username": "jojo",
-      "password": "09546132465",
-      "name": "hajradwan",
-      "email": "gogo",
-      "phoneNumber": "3543035430384",
-      "DOB": "${DateTime.now()}",
-      "role": "PATIENT",
-      "gender": "MALE",
-      "patient": {"adress": "halab"},
-      "doctor": "null",
-    };
-    final jsondata = jsonEncode(data);
-    // debugPrint(jsondata);
-    http.Response response = http.Response(jsondata, 200);
+    final response = await client.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(body),
+    );
+    // final data = {
+    //   "id": "20",
+    //   "username": "jojo",
+    //   "password": "09546132465",
+    //   "name": "hajradwan",
+    //   "email": "gogo",
+    //   "phoneNumber": "3543035430384",
+    //   "DOB": "${DateTime.now()}",
+    //   "role": "PATIENT",
+    //   "gender": "MALE",
+    //   "patient": {"address": "halab"},
+    //   "doctor": "null",
+    // };
+    // final jsondata = jsonEncode(data);
+    // // debugPrint(jsondata);
+    // http.Response response = http.Response(jsondata, 200);
     // log(response.body);
     log("status code is ${response.statusCode} res is ${response.body}");
     return handleResponse(response, (json) {

@@ -2,6 +2,7 @@ import 'package:doclib/core/constants/gender_enum.dart';
 import 'package:doclib/core/constants/user_role_enum.dart';
 import 'package:doclib/features/auth/data/models/user_model.dart';
 import 'package:doclib/features/auth/domain/entities/patient.dart';
+import 'package:flutter/material.dart';
 
 class PatientModel extends UserModel {
   final List<String>? appointments;
@@ -21,39 +22,28 @@ class PatientModel extends UserModel {
     required this.drugs,
     required this.documents,
   });
-  factory PatientModel.fromJson(Map<String, dynamic> json) => PatientModel(
-    appointments: null,
-    //  (json['appointments'] as List<Object>? ?? []).toList(),
-    drugs: null,
-    // (json['drugs'] as List<Object>? ?? []).toList(),
-    documents: null,
-    //  (json['documents'] as List<Object>? ?? []).toList(),
-    birthDate: DateTime.parse(json['DOB']),
-    fullName: json['name'] ?? "hajradoooooooooo",
-    phonNumber: json['phonNumber'],
-    userGender:
-        //  GenderEnum.values.firstWhere(
-        //   (e) => e.displayName == json['gender'],
-        // )??
-        GenderEnum.female,
-    userRoleEnum: UserRoleEnum.patient,
-    token: json['token'],
-    id: json["id"],
-    userName: json['username'],
-    password: json["password"],
-  );
-  @override
-  Map<String, dynamic> toJson() => {
-    'birthDate': birthDate.toIso8601String(),
-    'Name': fullName,
-    'phonNumber': phonNumber,
-    'userGender': userGender.displayName,
-    'userRoleEnum': userRoleEnum.displayName,
-    'token': token,
-    'appointments': appointments,
-    'drugs': drugs,
-    'documents': documents,
-  };
+  factory PatientModel.fromJson(Map<String, dynamic> json) {
+    // debugPrint(" ths json is ${json.toString()}", wrapWidth: 10);
+    return PatientModel(
+      appointments: null,
+      //  (json['appointments'] as List<Object>? ?? []).toList(),
+      drugs: null,
+      // (json['drugs'] as List<Object>? ?? []).toList(),
+      documents: null,
+      //  (json['documents'] as List<Object>? ?? []).toList(),
+      birthDate: DateTime.parse(json['DOB']),
+      fullName: json['name'],
+      phonNumber: json['phoneNumber'],
+      userGender: GenderEnum.values.firstWhere(
+        (e) => e.displayName == json['gender'],
+      ),
+      userRoleEnum: UserRoleEnum.patient,
+      token: json['token'],
+      id: json["id"].toString(),
+      userName: json['username'],
+      password: json["password"].toString(),
+    );
+  }
   @override
   Patient toEntity() {
     return Patient(

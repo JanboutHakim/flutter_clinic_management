@@ -9,7 +9,9 @@ import 'package:doclib/features/auth/data/models/user_model.dart';
 class UserMapper {
   static UserModel fromJson(Map<String, dynamic> json) {
     final role = UserRoleEnum.patient;
-    log("now role has recieved${role.displayName}");
+    log(
+      "now role has recieved${role.displayName} /n and the json mapper is ${json.toString()} ",
+    );
     switch (role) {
       case UserRoleEnum.doctor:
         log("doctor mapper");

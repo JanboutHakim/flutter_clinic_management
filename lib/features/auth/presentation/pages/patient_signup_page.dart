@@ -47,14 +47,14 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
 
   // Clears all controllers and resets the form
   void _clearControllers() {
-    _fullNameController.clear();
-    _phoneController.clear();
-    _usernameController.clear();
-    _passwordController.clear();
-    _addressController.clear();
-    _emailController.clear();
-    _formKey.currentState?.reset();
     setState(() {
+      _fullNameController.clear();
+      _phoneController.clear();
+      _usernameController.clear();
+      _passwordController.clear();
+      _addressController.clear();
+      _emailController.clear();
+      _formKey.currentState?.reset();
       _selectedGender = GenderEnum.male;
       _selectedDate = null;
       _dateValid = true;
@@ -223,7 +223,6 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                   validator:
                       (value) =>
                           value == null || value.isEmpty ? 'Required' : null,
-                  onChanged: (_) => setState(() {}),
                 ),
 
                 const SizedBox(height: 12),
@@ -253,7 +252,6 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                   validator:
                       (value) =>
                           value == null || value.isEmpty ? 'Required' : null,
-                  onChanged: (_) => setState(() {}),
                 ),
 
                 TextFormField(
