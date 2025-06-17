@@ -24,7 +24,7 @@
 //   );
 // }
 
-import 'package:doclib/features/auth/data/datasources/auth_patient_remote_data_source.dart';
+import 'package:doclib/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:doclib/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:doclib/features/auth/domain/repositories/auth_repository.dart';
 import 'package:doclib/features/auth/domain/usecases/login_usecase.dart';

@@ -2,14 +2,12 @@ import 'package:doclib/core/constants/gender_enum.dart';
 import 'package:doclib/core/constants/user_role_enum.dart';
 import 'package:doclib/features/auth/data/models/user_model.dart';
 import 'package:doclib/features/auth/domain/entities/patient.dart';
-import 'package:flutter/material.dart';
 
 class PatientModel extends UserModel {
   final List<String>? appointments;
   final List<String>? drugs;
   final List<String>? documents;
   PatientModel({
-    required super.password,
     required super.userName,
     super.id,
     super.token,
@@ -41,7 +39,7 @@ class PatientModel extends UserModel {
       token: json['token'],
       id: json["id"].toString(),
       userName: json['username'],
-      password: json["password"].toString(),
+      // password: json["password"].toString(),
     );
   }
   @override

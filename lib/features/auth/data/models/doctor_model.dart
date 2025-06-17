@@ -10,7 +10,7 @@ class DoctorModel extends UserModel {
   final List<Object> patients;
   final int yearsOfExperience;
   DoctorModel({
-    required super.password,
+    // required super.password,
     required super.userName,
     super.id,
     required this.yearsOfExperience,
@@ -44,7 +44,7 @@ class DoctorModel extends UserModel {
     ),
     token: json['token'],
     id: json["id"],
-    password: json["password"],
+    // password: json["password"],
   );
 
   @override

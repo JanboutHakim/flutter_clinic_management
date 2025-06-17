@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:doclib/core/errors/failure.dart';
-import 'package:doclib/features/auth/data/datasources/auth_patient_remote_data_source.dart';
+import 'package:doclib/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:doclib/features/auth/data/models/Auth_model.dart';
 import 'package:doclib/features/auth/domain/entities/user.dart';
 import 'package:doclib/features/auth/domain/repositories/auth_repository.dart';
@@ -36,9 +36,9 @@ class AuthRepositoryImpl implements AuthRepository {
       log(entity.runtimeType.toString());
       return right(entity.toEntity());
     } catch (e, stack) {
-      log(stack.toString());
+      log(e.toString());
       // log(entity.runtimeType.toString());
-      return left(ServerFailure());
+      return left(NetworkFailure());
     }
   }
 }
