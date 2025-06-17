@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:doclib/core/errors/failure.dart';
+import 'package:doclib/core/errors/exeptions.dart';
+import 'package:doclib/core/errors/error_mapper.dart';
 import 'package:doclib/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:doclib/features/auth/data/models/Auth_model.dart';
 import 'package:doclib/features/auth/domain/entities/user.dart';
@@ -20,8 +22,10 @@ class AuthRepositoryImpl implements AuthRepository {
         authreRuest: authRequest,
       );
       return right(entity.toEntity());
+    } on AppException catch (e) {
+      return left(ErrorMapper.map(e));
     } catch (e) {
-      return left(ServerFailure());
+      return left(ServerFailure(e.toString()));
     }
   }
 
@@ -35,10 +39,10 @@ class AuthRepositoryImpl implements AuthRepository {
       );
       log(entity.runtimeType.toString());
       return right(entity.toEntity());
-    } catch (e, stack) {
-      log(e.toString());
-      // log(entity.runtimeType.toString());
-      return left(NetworkFailure());
+    } on AppException catch (e) {
+      return left(ErrorMapper.map(e));
+    } catch (e) {
+      return left(ServerFailure(e.toString()));
     }
   }
 }
