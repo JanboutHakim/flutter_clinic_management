@@ -6,17 +6,17 @@ import 'package:doclib/core/errors/failure.dart';
 class ErrorMapper {
   static Failure map(AppException exception) {
     switch (exception.runtimeType) {
-      case ServerException:
+      case ServerException _:
         return ServerFailure(exception.message, exception.details);
-      case NetworkException:
+      case NetworkException _:
         return NetworkFailure(exception.message, exception.details);
-      case UnauthorizedException:
+      case UnauthorizedException _:
         return AuthFailure(exception.message, exception.details);
-      case CacheException:
+      case CacheException _:
+        return CachFailure(exception.message);
+      case NotFoundException _:
         return ServerFailure(exception.message, exception.details);
-      case NotFoundException:
-        return ServerFailure(exception.message, exception.details);
-      case ValidationException:
+      case ValidationException _:
         return ServerFailure(exception.message, exception.details);
       default:
         return ServerFailure(exception.toString());

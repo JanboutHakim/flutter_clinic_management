@@ -9,13 +9,13 @@ abstract class UserModel extends User {
   UserModel({
     // required this.password,
     required super.userName,
-    super.id,
+    required super.id,
     required super.birthDate,
     required super.fullName,
     required super.phonNumber,
     required super.userGender,
     required super.userRoleEnum,
-    super.token,
+    required super.token,
   });
   User toEntity();
 }

@@ -7,17 +7,13 @@ typedef JsonFactory<T> = T Function(Map<String, dynamic> json);
 
 T handleResponse<T>(http.Response response, JsonFactory<T> fromJson) {
   final decoded = jsonDecode(response.body);
-
   log("start handlerwith status code $decoded");
   switch (response.statusCode) {
     case 200:
-      print("asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf");
       log("200  ok ${fromJson(decoded).toString()}");
       return fromJson(decoded);
     case 201:
-      log("201 ok ${fromJson(decoded).toString()}");
       return fromJson(decoded);
-
     case 400:
       throw ValidationException(
         decoded['message'] ?? 'Validation failed',
@@ -45,5 +41,4 @@ T handleResponse<T>(http.Response response, JsonFactory<T> fromJson) {
       log("throw not found");
       throw Exception('root Unknown error');
   }
-  // log(message);
 }

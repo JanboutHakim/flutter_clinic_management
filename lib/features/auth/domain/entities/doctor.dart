@@ -9,9 +9,9 @@ class Doctor extends User {
   final int yearsOfExperience;
   Doctor({
     required super.userName,
-    super.id,
+    required super.id,
     required this.yearsOfExperience,
-    super.token,
+    required super.token,
     required this.spec,
     required this.address,
     this.appointments = const [],
