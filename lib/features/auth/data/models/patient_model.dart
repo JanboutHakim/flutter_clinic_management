@@ -30,8 +30,8 @@ class PatientModel extends UserModel {
       documents: null,
       //  (json['documents'] as List<Object>? ?? []).toList(),
       birthDate: DateTime.parse(json['DOB']),
-      fullName: json['name'],
-      phonNumber: json['phoneNumber'],
+      fullName: json['name'].toString(),
+      phonNumber: json['phoneNumber'].toString(),
       userGender: GenderEnum.values.firstWhere(
         (e) => e.displayName == json['gender'],
       ),
