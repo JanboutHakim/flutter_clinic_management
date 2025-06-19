@@ -2,11 +2,14 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:doclib/core/errors/handler.dart';
-import 'package:doclib/features/auth/data/datasources/model_mapper.dart';
+import 'package:doclib/core/errors/exeptions.dart';
+import 'package:doclib/core/network/network_checker.dart';
+import 'package:doclib/features/auth/data/models/model_mapper.dart';
 import 'package:doclib/features/auth/data/models/Auth_model.dart';
 import 'package:doclib/features/auth/data/models/user_model.dart';
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:doclib/core/constants/text_constants.dart' as cons;
 
 abstract class AuthRemoteDataSource {
   Future<UserModel> login({required AuthRequest authreRuest});
@@ -23,13 +26,21 @@ class AuthRemoteDataSoureceImpl implements AuthRemoteDataSource {
     log("start sendeing register request ");
     log("auth is${authRequest.toJson().toString()}");
     // print("fofofofofofofofofofofo");
-    final url = Uri.parse('http://192.168.137.1:8080/auth/register');
+    // if (!await NetworkChecker.isConnected) {
+    //   throw NetworkException();
+    // }
+    final url = Uri.parse('${cons.api}/auth/register');
     final body = authRequest.toJson();
-    final response = await client.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(body),
-    );
+    late http.Response response;
+    try {
+      response = await client.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(body),
+      );
+    } on SocketException {
+      throw NetworkException();
+    }
     // final data = {
     //   "id": "20",
     //   "username": "jojo",
@@ -55,13 +66,21 @@ class AuthRemoteDataSoureceImpl implements AuthRemoteDataSource {
 
   @override
   Future<UserModel> login({required AuthRequest authreRuest}) async {
-    final url = Uri.parse('http://192.168.1.137:8080/auth/login');
+    // if (!await NetworkChecker.isConnected) {
+    //   throw NetworkException();
+    // }
+    final url = Uri.parse('${cons.api}/auth/login');
     final body = authreRuest.toJson();
-    final response = await client.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(body),
-    );
+    late http.Response response;
+    try {
+      response = await client.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(body),
+      );
+    } on SocketException {
+      throw NetworkException();
+    }
 
     return handleResponse(response, (json) => UserMapper.fromJson(json));
   }

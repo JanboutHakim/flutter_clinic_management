@@ -23,3 +23,5 @@ class AuthSignIn extends AuthBlocEvent {
 }
 
 class AuthSignOut extends AuthBlocEvent {}
+
+class AuthCheckUserSession extends AuthBlocEvent {}

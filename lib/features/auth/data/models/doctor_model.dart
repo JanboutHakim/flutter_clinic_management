@@ -12,13 +12,13 @@ class DoctorModel extends UserModel {
   DoctorModel({
     // required super.password,
     required super.userName,
-    super.id,
+    required super.id,
     required this.yearsOfExperience,
     required this.spec,
     required this.address,
     required this.appointments,
     required this.patients,
-    super.token,
+    required super.token,
     required super.birthDate,
     required super.fullName,
     required super.phonNumber,
@@ -76,6 +76,7 @@ class DoctorModel extends UserModel {
       userRoleEnum: userRoleEnum,
       userGender: userGender,
       userName: userName,
+      id: id,
     );
   }
 }
