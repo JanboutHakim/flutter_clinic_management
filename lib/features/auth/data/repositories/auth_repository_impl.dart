@@ -10,8 +10,6 @@ import 'package:doclib/features/auth/data/models/Auth_model.dart';
 import 'package:doclib/features/auth/data/models/user_model.dart';
 import 'package:doclib/features/auth/domain/entities/user.dart';
 import 'package:doclib/features/auth/domain/repositories/auth_repository.dart';
-import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource authRemoteDataSourece;

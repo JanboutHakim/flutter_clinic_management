@@ -10,7 +10,6 @@ void main() async {
   FlutterNativeSplash.preserve(
     widgetsBinding: WidgetsFlutterBinding.ensureInitialized(),
   );
-
   runApp(const Providers(child: MainApp()));
   Future.delayed(const Duration(seconds: 3), () {
     FlutterNativeSplash.remove();

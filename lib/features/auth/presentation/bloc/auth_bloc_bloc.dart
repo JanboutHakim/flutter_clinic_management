@@ -5,6 +5,7 @@ import 'package:doclib/features/auth/data/models/Auth_model.dart';
 import 'package:doclib/features/auth/domain/entities/user.dart';
 import 'package:doclib/features/auth/domain/usecases/cach_token_usecase.dart';
 import 'package:doclib/features/auth/domain/usecases/get_cached_token_usecase.dart';
+import 'package:doclib/features/auth/domain/usecases/get_cached_user.dart';
 import 'package:doclib/features/auth/domain/usecases/login_usecase.dart';
 import 'package:doclib/features/auth/domain/usecases/signup_usecase.dart';
 import 'package:equatable/equatable.dart';
@@ -17,7 +18,9 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
   final LoginUsecase loginUsecase;
   final GetCachedTokenUsecase getCachedTokenUsecase;
   final CachTokenUsecase cachTokenUsecase;
+  final GetCachedUserUseCase getCachedUserCase;
   AuthBlocBloc({
+    required this.getCachedUserCase,
     required this.loginUsecase,
     required this.signUpUseCase,
     required this.cachTokenUsecase,
@@ -31,17 +34,21 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
     AuthCheckUserSession event,
     Emitter<AuthBlocState> emit,
   ) async {
+    emit(AuthLoading());
     final result = await getCachedTokenUsecase();
 
     result.fold(
       (e) {
         emit(AuthFailed(e.message));
       },
-      (token) {
+      (token) async {
         if (token == null) {
           emit(AuthUnAuthenticated());
         } else {
-          // emit(AuthAuthenticated());
+          final user = await getCachedUserCase();
+          user.fold((f) {
+            emit(AuthFailed("try agen"));
+          }, (r) => emit(AuthAuthenticated(r)));
         }
       },
     );
@@ -51,6 +58,8 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
     AuthSignUpAsPatietn event,
     Emitter<AuthBlocState> emit,
   ) async {
+    emit(AuthLoading());
+
     final res = await signUpUseCase(authRequest: event.patient);
     res.fold((f) => emit(AuthFailed(f.message)), (user) async {
       emit(AuthAuthenticated(user));
@@ -59,6 +68,8 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
   }
 
   Future<void> _authsigin(AuthSignIn event, Emitter<AuthBlocState> emit) async {
+    emit(AuthLoading());
+
     final res = await loginUsecase(authRequest: event.authRequest);
     res.fold((f) => emit(AuthFailed(f.message)), (user) {
       emit(AuthAuthenticated(user));

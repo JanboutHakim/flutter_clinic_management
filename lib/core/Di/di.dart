@@ -30,6 +30,7 @@ import 'package:doclib/features/auth/data/repositories/auth_repository_impl.dart
 import 'package:doclib/features/auth/domain/repositories/auth_repository.dart';
 import 'package:doclib/features/auth/domain/usecases/cach_token_usecase.dart';
 import 'package:doclib/features/auth/domain/usecases/get_cached_token_usecase.dart';
+import 'package:doclib/features/auth/domain/usecases/get_cached_user.dart';
 import 'package:doclib/features/auth/domain/usecases/login_usecase.dart';
 import 'package:doclib/features/auth/domain/usecases/signup_usecase.dart';
 import 'package:doclib/features/auth/presentation/bloc/auth_bloc_bloc.dart';
@@ -75,10 +76,14 @@ Future<void> initAuthFuture() async {
   getIt.registerLazySingleton<GetCachedTokenUsecase>(
     () => GetCachedTokenUsecase(getIt<AuthRepository>()),
   );
+  getIt.registerLazySingleton<GetCachedUserUseCase>(
+    () => GetCachedUserUseCase(getIt<AuthRepository>()),
+  );
 
   // 5. Register BLoC (assuming it takes use cases as parameters)
   getIt.registerFactory<AuthBlocBloc>(
     () => AuthBlocBloc(
+      getCachedUserCase: getIt<GetCachedUserUseCase>(),
       cachTokenUsecase: getIt<CachTokenUsecase>(),
       getCachedTokenUsecase: getIt<GetCachedTokenUsecase>(),
       loginUsecase: getIt<LoginUsecase>(),

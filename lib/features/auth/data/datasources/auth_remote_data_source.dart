@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:doclib/core/errors/handler.dart';
 import 'package:doclib/core/errors/exeptions.dart';
-import 'package:doclib/core/network/network_checker.dart';
 import 'package:doclib/features/auth/data/models/model_mapper.dart';
 import 'package:doclib/features/auth/data/models/Auth_model.dart';
 import 'package:doclib/features/auth/data/models/user_model.dart';

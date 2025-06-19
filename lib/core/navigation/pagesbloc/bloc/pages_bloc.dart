@@ -1,8 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:doclib/features/auth/presentation/pages/Auth_secreen.dart';
-import 'package:doclib/root_page.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/widgets.dart';
 
 part 'pages_event.dart';
 part 'pages_state.dart';

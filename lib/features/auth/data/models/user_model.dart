@@ -1,7 +1,5 @@
 // import 'package:doclib/core/constants/gender_enum.dart';
 // import 'package:doclib/core/constants/user_role_enum.dart';
-import 'package:doclib/core/constants/gender_enum.dart';
-import 'package:doclib/core/constants/user_role_enum.dart';
 import 'package:doclib/features/auth/domain/entities/user.dart';
 
 abstract class UserModel extends User {
