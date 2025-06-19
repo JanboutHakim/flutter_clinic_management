@@ -96,7 +96,25 @@ class PatientModel extends UserModel {
   }
 
   @override
-  String toString() {
-    return 'PatientModel(appointments: $appointments, drugs: $drugs, documents: $documents, token: $token, birthDate: $birthDate, fullName: $fullName, phonNumber: $phonNumber, userGender: $userGender, userRoleEnum: $userRoleEnum)';
+  UserModel fromJson(Map<String, dynamic> json) {
+    return PatientModel.fromJson(json);
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'username': userName,
+      'name': fullName,
+      'email': '', // Add if available
+      'phoneNumber': phonNumber,
+      'DOB': birthDate.toIso8601String(),
+      'role': userRoleEnum.name,
+      'gender': userGender.displayName,
+      'token': token,
+      'appointments': appointments,
+      'drugs': drugs,
+      'documents': documents,
+    };
   }
 }

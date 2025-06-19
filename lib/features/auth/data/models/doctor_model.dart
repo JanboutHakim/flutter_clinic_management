@@ -79,4 +79,9 @@ class DoctorModel extends UserModel {
       id: id,
     );
   }
+
+  @override
+  UserModel fromJson(Map<String, dynamic> json) {
+    return DoctorModel.fromJson(json);
+  }
 }

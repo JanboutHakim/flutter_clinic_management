@@ -60,9 +60,8 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
 
   Future<void> _authsigin(AuthSignIn event, Emitter<AuthBlocState> emit) async {
     final res = await loginUsecase(authRequest: event.authRequest);
-    res.fold(
-      (f) => emit(AuthFailed(f.message)),
-      (user) => emit(AuthAuthenticated(user)),
-    );
+    res.fold((f) => emit(AuthFailed(f.message)), (user) {
+      emit(AuthAuthenticated(user));
+    });
   }
 }

@@ -7,8 +7,11 @@ import 'package:doclib/core/errors/error_mapper.dart';
 import 'package:doclib/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:doclib/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:doclib/features/auth/data/models/Auth_model.dart';
+import 'package:doclib/features/auth/data/models/user_model.dart';
 import 'package:doclib/features/auth/domain/entities/user.dart';
 import 'package:doclib/features/auth/domain/repositories/auth_repository.dart';
+import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource authRemoteDataSourece;
@@ -38,15 +41,23 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, User>> signUp({
     required AuthRequest authRequest,
   }) async {
+    late User user;
     try {
-      final entity = await authRemoteDataSourece.register(
+      final model = await authRemoteDataSourece.register(
         authRequest: authRequest,
       );
-      log(entity.runtimeType.toString());
-      return right(entity.toEntity());
-      // } on AppException catch (e) {
-      //   return left(ErrorMapper.map(e));
-      // }
+      log(model.runtimeType.toString());
+
+      final isSaved = await cachUser(model);
+      isSaved.fold((l) => left(l), (r) {
+        r == true
+            ? user = model.toEntity()
+            : {
+              log("succes but not saved after sign up  "),
+              user = user = model.toEntity(),
+            };
+      });
+      return Right(user);
     } catch (e, stack) {
       log(stack.toString());
       return left(ServerFailure(e.toString()));
@@ -74,6 +85,35 @@ class AuthRepositoryImpl implements AuthRepository {
           "error when get the local token / the exeption is  ${e.runtimeType}",
         ),
       );
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> cachUser(UserModel model) async {
+    try {
+      final succ = await authLocalDataSource.cacheUserData(model);
+      if (succ) {
+        return right(succ);
+      }
+    } catch (e, s) {
+      log(s.toString());
+      return left(CachFailure("error "));
+    }
+    throw CacheException();
+  }
+
+  @override
+  Future<Either<Failure, User>> getCacheduser() async {
+    try {
+      final user = await authLocalDataSource.getCachedUser();
+      if (user == null)
+        // ignore: curly_braces_in_flow_control_structures
+        return left(CachFailure("there is no user data localy"));
+      else
+        // ignore: curly_braces_in_flow_control_structures
+        return Right(user.toEntity());
+    } catch (e) {
+      return left(CachFailure("no data"));
     }
   }
 }

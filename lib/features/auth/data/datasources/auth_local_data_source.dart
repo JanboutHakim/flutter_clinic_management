@@ -1,13 +1,15 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'package:doclib/core/constants/text_constants.dart' as cons;
 import 'package:doclib/core/errors/exeptions.dart';
+import 'package:doclib/features/auth/data/models/model_mapper.dart';
 import 'package:doclib/features/auth/data/models/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AuthLocalDataSource {
   ///add recieved token to lacal storge
   Future<bool> cacheToken(String token);
-  Future<void> cacheUserData(UserModel user);
+  Future<bool> cacheUserData(UserModel user);
   Future<String?> getCachedToken();
   Future<UserModel?> getCachedUser();
   Future<void> clearAll(); // useful for logout
@@ -27,15 +29,17 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   }
 
   @override
-  Future<void> cacheUserData(UserModel user) {
-    // TODO: implement cacheUserData
-    throw UnimplementedError();
+  Future<bool> cacheUserData(UserModel user) async {
+    final isSuccess = await localBox.setString(
+      cons.localUser,
+      jsonEncode(user.toJson()),
+    );
+    return isSuccess;
   }
 
   @override
-  Future<void> clearAll() {
-    // TODO: implement clearAll
-    throw UnimplementedError();
+  Future<void> clearAll() async {
+    await localBox.clear();
   }
 
   @override
@@ -50,8 +54,13 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   }
 
   @override
-  Future<UserModel?> getCachedUser() {
-    // TODO: implement getCachedUser
-    throw UnimplementedError();
+  Future<UserModel?> getCachedUser() async {
+    final userStringData = localBox.getString(cons.localUser);
+    if (userStringData != null) {
+      final json = jsonDecode(userStringData);
+      return UserMapper.fromJson(json);
+    } else {
+      throw CacheException();
+    }
   }
 }

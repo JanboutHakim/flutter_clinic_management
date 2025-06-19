@@ -18,4 +18,6 @@ abstract class UserModel extends User {
     required super.token,
   });
   User toEntity();
+  UserModel fromJson(Map<String, dynamic> json);
+  Map<String, dynamic> toJson();
 }
