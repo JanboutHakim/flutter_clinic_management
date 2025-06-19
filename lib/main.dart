@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:doclib/core/Di/di.dart';
 import 'package:doclib/core/navigation/app_router.dart';
 import 'package:doclib/core/widgets/providers.dart';
@@ -10,10 +12,14 @@ void main() async {
   FlutterNativeSplash.preserve(
     widgetsBinding: WidgetsFlutterBinding.ensureInitialized(),
   );
-  runApp(const Providers(child: MainApp()));
-  Future.delayed(const Duration(seconds: 3), () {
-    FlutterNativeSplash.remove();
-  });
+  try {
+    runApp(const Providers(child: MainApp()));
+    // Future.delayed(const Duration(seconds: 3), () {
+    //   FlutterNativeSplash.remove();
+    // });
+  } catch (e, s) {
+    log(s.toString());
+  }
 }
 
 class MainApp extends StatelessWidget {

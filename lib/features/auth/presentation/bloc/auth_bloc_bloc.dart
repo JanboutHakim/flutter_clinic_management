@@ -34,7 +34,7 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
     AuthCheckUserSession event,
     Emitter<AuthBlocState> emit,
   ) async {
-    emit(AuthLoading());
+    // emit(AuthLoading());
     final result = await getCachedTokenUsecase();
 
     result.fold(
@@ -58,7 +58,7 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
     AuthSignUpAsPatietn event,
     Emitter<AuthBlocState> emit,
   ) async {
-    emit(AuthLoading());
+    // emit(AuthLoading());
 
     final res = await signUpUseCase(authRequest: event.patient);
     res.fold((f) => emit(AuthFailed(f.message)), (user) async {
@@ -68,7 +68,7 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
   }
 
   Future<void> _authsigin(AuthSignIn event, Emitter<AuthBlocState> emit) async {
-    emit(AuthLoading());
+    // emit(AuthLoading());
 
     final res = await loginUsecase(authRequest: event.authRequest);
     res.fold((f) => emit(AuthFailed(f.message)), (user) {
