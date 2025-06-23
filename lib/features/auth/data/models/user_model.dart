@@ -7,13 +7,13 @@ abstract class UserModel extends User {
   UserModel({
     // required this.password,
     required super.userName,
-    required super.id,
+    super.id,
     required super.birthDate,
     required super.fullName,
     required super.phonNumber,
     required super.userGender,
     required super.userRoleEnum,
-    required super.token,
+    super.token,
   });
   User toEntity();
   UserModel fromJson(Map<String, dynamic> json);

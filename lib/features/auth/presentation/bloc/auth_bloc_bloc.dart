@@ -18,9 +18,9 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
   final LoginUsecase loginUsecase;
   final GetCachedTokenUsecase getCachedTokenUsecase;
   final CachTokenUsecase cachTokenUsecase;
-  final GetCachedUserUseCase getCachedUserCase;
+  final GetCachedUserUseCase getCachedUserUseCase;
   AuthBlocBloc({
-    required this.getCachedUserCase,
+    required this.getCachedUserUseCase,
     required this.loginUsecase,
     required this.signUpUseCase,
     required this.cachTokenUsecase,
@@ -34,7 +34,7 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
     AuthCheckUserSession event,
     Emitter<AuthBlocState> emit,
   ) async {
-    // emit(AuthLoading());
+    emit(AuthLoading());
     final result = await getCachedTokenUsecase();
 
     result.fold(
@@ -45,9 +45,9 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
         if (token == null) {
           emit(AuthUnAuthenticated());
         } else {
-          final user = await getCachedUserCase();
+          final user = await getCachedUserUseCase();
           user.fold((f) {
-            emit(AuthFailed("try agen"));
+            emit(AuthFailed("try again"));
           }, (r) => emit(AuthAuthenticated(r)));
         }
       },
@@ -58,18 +58,17 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
     AuthSignUpAsPatietn event,
     Emitter<AuthBlocState> emit,
   ) async {
-    // emit(AuthLoading());
+    emit(AuthLoading());
 
     final res = await signUpUseCase(authRequest: event.patient);
     res.fold((f) => emit(AuthFailed(f.message)), (user) async {
       emit(AuthAuthenticated(user));
-      final saved = await cachTokenUsecase(token: user.token);
+      final saved = await cachTokenUsecase(token: user.token ?? "null");
     });
   }
 
   Future<void> _authsigin(AuthSignIn event, Emitter<AuthBlocState> emit) async {
-    // emit(AuthLoading());
-
+    emit(AuthLoading());
     final res = await loginUsecase(authRequest: event.authRequest);
     res.fold((f) => emit(AuthFailed(f.message)), (user) {
       emit(AuthAuthenticated(user));

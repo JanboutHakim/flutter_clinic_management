@@ -7,16 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 
 void main() async {
-  await initAuthFuture();
   WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(
     widgetsBinding: WidgetsFlutterBinding.ensureInitialized(),
   );
+  await initAuthFuture();
+
   try {
     runApp(const Providers(child: MainApp()));
     // Future.delayed(const Duration(seconds: 3), () {
     //   FlutterNativeSplash.remove();
     // });
+    FlutterNativeSplash.remove();
   } catch (e, s) {
     log(s.toString());
   }

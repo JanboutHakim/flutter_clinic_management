@@ -46,8 +46,8 @@ class PatientModel extends UserModel {
 
   PatientModel({
     required super.userName,
-    required super.id,
-    required super.token,
+    super.id,
+    super.token,
     required super.birthDate,
     required super.fullName,
     required super.phonNumber,

@@ -6,3 +6,5 @@ sealed class DrugsEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class GetCommonDrugs extends DrugsEvent {}
