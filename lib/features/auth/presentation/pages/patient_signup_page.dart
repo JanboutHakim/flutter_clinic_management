@@ -66,6 +66,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBlocBloc, AuthBlocState>(
       listener: (context, state) {
+        late Widget child;
         if (state is AuthAuthenticated) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Registered successfully')),

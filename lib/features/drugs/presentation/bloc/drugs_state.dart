@@ -11,9 +11,9 @@ final class DrugsInitial extends DrugsState {}
 
 final class DrugLoading extends DrugsState {}
 
-final class DrugFaild extends DrugsState {
+final class DrugFailed extends DrugsState {
   final Failure failure;
-  const DrugFaild(this.failure);
+  const DrugFailed(this.failure);
   @override
   List<Object> get props => [failure];
 }

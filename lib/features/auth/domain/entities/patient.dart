@@ -6,7 +6,7 @@ class Patient extends User {
   final List<String?>? documents;
   Patient({
     required super.userName,
-    required super.id,
+    super.id,
     this.appointments = const [],
     this.documents = const [],
     this.drugs = const [],
@@ -15,6 +15,6 @@ class Patient extends User {
     required super.phonNumber,
     required super.userRoleEnum,
     required super.userGender,
-    required super.token,
+    super.token,
   });
 }

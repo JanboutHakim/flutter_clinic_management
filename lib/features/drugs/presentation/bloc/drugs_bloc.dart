@@ -20,6 +20,6 @@ class DrugsBloc extends Bloc<DrugsEvent, DrugsState> {
   ) async {
     emit(DrugLoading());
     final res = await getCommonDrugsUseCase();
-    res.fold((l) => emit(DrugFaild(l)), (r) => emit(DrugSuccess(drugs: r)));
+    res.fold((l) => emit(DrugFailed(l)), (r) => emit(DrugSuccess(drugs: r)));
   }
 }

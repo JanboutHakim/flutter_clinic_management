@@ -18,6 +18,11 @@ final class AuthAuthenticated extends AuthBlocState {
   const AuthAuthenticated(this.user);
 }
 
+final class AuthWaitingOtpVerify extends AuthBlocState {
+  final User user;
+  const AuthWaitingOtpVerify({required this.user});
+}
+
 final class AuthFailed extends AuthBlocState {
   final String massege;
   final DateTime time = DateTime.now();

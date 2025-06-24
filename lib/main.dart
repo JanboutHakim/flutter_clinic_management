@@ -15,9 +15,9 @@ void main() async {
 
   try {
     runApp(const Providers(child: MainApp()));
-    // Future.delayed(const Duration(seconds: 3), () {
-    //   FlutterNativeSplash.remove();
-    // });
+    Future.delayed(const Duration(seconds: 3), () {
+      FlutterNativeSplash.remove();
+    });
     FlutterNativeSplash.remove();
   } catch (e, s) {
     log(s.toString());

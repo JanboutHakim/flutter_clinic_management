@@ -7,6 +7,8 @@ import 'package:doclib/core/errors/error_mapper.dart';
 import 'package:doclib/features/auth/data/datasources/auth_local_data_source.dart';
 import 'package:doclib/features/auth/data/datasources/auth_remote_data_source.dart';
 import 'package:doclib/features/auth/data/models/Auth_model.dart';
+import 'package:doclib/features/auth/data/models/Tokens_response.dart';
+import 'package:doclib/features/auth/data/models/otp_request_model.dart';
 import 'package:doclib/features/auth/data/models/user_model.dart';
 import 'package:doclib/features/auth/domain/entities/user.dart';
 import 'package:doclib/features/auth/domain/repositories/auth_repository.dart';
@@ -25,7 +27,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }) async {
     try {
       final entity = await authRemoteDataSourece.login(
-        authreRuest: authRequest,
+        authrequest: authRequest,
       );
       return right(entity.toEntity());
     } on AppException catch (e) {
@@ -112,6 +114,20 @@ class AuthRepositoryImpl implements AuthRepository {
         return Right(user.toEntity());
     } catch (e) {
       return left(CachFailure("no data"));
+    }
+  }
+
+  @override
+  Future<Either<Failure, TokensResponse>> verfiyOtp({
+    required OtpRequestModel request,
+  }) async {
+    try {
+      final response = await authRemoteDataSourece.otpVerify(request: request);
+      return right(response);
+    } on UnauthorizedException {
+      return left(AuthFailure("UnAuthorized"));
+    } catch (e) {
+      return left(AuthFailure());
     }
   }
 }

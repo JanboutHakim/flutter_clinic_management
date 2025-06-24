@@ -1,6 +1,7 @@
 import 'package:doclib/core/navigation/pagesbloc/bloc/pages_bloc.dart';
 import 'package:doclib/features/appointments/presentation/pages/appointments_page.dart';
 import 'package:doclib/features/auth/presentation/bloc/auth_bloc_bloc.dart';
+import 'package:doclib/features/auth/presentation/pages/account.dart';
 import 'package:doclib/features/auth/presentation/pages/patient_signup_page.dart';
 import 'package:doclib/features/drugs/presentation/pages/drugs_pages.dart';
 import 'package:doclib/features/home/presentation/pages/home_page.dart';
@@ -24,7 +25,7 @@ class RootPage extends StatelessWidget {
                 AppointmentsPage(),
                 DrugsPages(),
                 testwid(text: "four"),
-                PatientSignupPage(),
+                AccountRootPage(),
               ],
             ),
 

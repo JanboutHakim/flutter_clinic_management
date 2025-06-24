@@ -25,3 +25,9 @@ class AuthSignIn extends AuthBlocEvent {
 class AuthSignOut extends AuthBlocEvent {}
 
 class AuthCheckUserSession extends AuthBlocEvent {}
+
+class AuthOtpVerify extends AuthBlocEvent {
+  final User user;
+  final OtpRequestModel requestModel;
+  const AuthOtpVerify({required this.requestModel, required this.user});
+}

@@ -2,12 +2,14 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:doclib/features/auth/data/models/Auth_model.dart';
+import 'package:doclib/features/auth/data/models/otp_request_model.dart';
 import 'package:doclib/features/auth/domain/entities/user.dart';
 import 'package:doclib/features/auth/domain/usecases/cach_token_usecase.dart';
 import 'package:doclib/features/auth/domain/usecases/get_cached_token_usecase.dart';
 import 'package:doclib/features/auth/domain/usecases/get_cached_user.dart';
 import 'package:doclib/features/auth/domain/usecases/login_usecase.dart';
 import 'package:doclib/features/auth/domain/usecases/signup_usecase.dart';
+import 'package:doclib/features/auth/domain/usecases/verify_otp_usecase.dart';
 import 'package:equatable/equatable.dart';
 
 part 'auth_bloc_event.dart';
@@ -19,7 +21,9 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
   final GetCachedTokenUsecase getCachedTokenUsecase;
   final CachTokenUsecase cachTokenUsecase;
   final GetCachedUserUseCase getCachedUserUseCase;
+  final VerifyOtpUsecase verifyOtpUsecase;
   AuthBlocBloc({
+    required this.verifyOtpUsecase,
     required this.getCachedUserUseCase,
     required this.loginUsecase,
     required this.signUpUseCase,
@@ -29,7 +33,20 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
     on<AuthSignUpAsPatietn>(_authsignup);
     on<AuthSignIn>(_authsigin);
     on<AuthCheckUserSession>(_authCheckSesssion);
+    on<AuthOtpVerify>(_authOtpVerify);
   }
+
+  Future<void> _authOtpVerify(
+    AuthOtpVerify event,
+    Emitter<AuthBlocState> emit,
+  ) async {
+    final result = await verifyOtpUsecase(request: event.requestModel);
+    result.fold(
+      (f) => emit(AuthFailed(f.message)),
+      (r) => emit(AuthAuthenticated(event.user)),
+    );
+  }
+
   Future<void> _authCheckSesssion(
     AuthCheckUserSession event,
     Emitter<AuthBlocState> emit,
@@ -59,11 +76,9 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
     Emitter<AuthBlocState> emit,
   ) async {
     emit(AuthLoading());
-
     final res = await signUpUseCase(authRequest: event.patient);
     res.fold((f) => emit(AuthFailed(f.message)), (user) async {
-      emit(AuthAuthenticated(user));
-      final saved = await cachTokenUsecase(token: user.token ?? "null");
+      emit(AuthWaitingOtpVerify(user: user));
     });
   }
 

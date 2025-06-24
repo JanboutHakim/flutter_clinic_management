@@ -28,7 +28,7 @@ class _DrugsPagesState extends State<DrugsPages> {
                   return Center(child: LinearProgressIndicator());
                 } else if (state is DrugSuccess) {
                   return DrugListView(drugs: state.drugs);
-                } else if (state is DrugFaild) {
+                } else if (state is DrugFailed) {
                   return Text(state.failure.message);
                 } else {
                   return Center(child: const Text('error'));
