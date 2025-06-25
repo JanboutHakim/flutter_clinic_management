@@ -60,6 +60,7 @@ class AuthRemoteDataSoureceImpl implements AuthRemoteDataSource {
     } on SocketException {
       throw NetworkException();
     } catch (e) {
+      log(e.runtimeType.toString());
       throw ServerException();
     }
     log("status code is ${response.statusCode} res is ${response.body}");

@@ -7,7 +7,7 @@ typedef JsonFactory<T> = T Function(Map<String, dynamic> json);
 
 T handleResponse<T>(http.Response response, JsonFactory<T> fromJson) {
   final decoded = jsonDecode(response.body);
-  log("start handlerwith status code $decoded");
+  // log("start handlerwith status code $decoded");
   switch (response.statusCode) {
     case 200:
       log("200  ok ${fromJson(decoded).toString()}");

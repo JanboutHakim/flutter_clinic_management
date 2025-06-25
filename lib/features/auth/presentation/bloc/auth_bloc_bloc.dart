@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:doclib/features/auth/data/models/Auth_model.dart';
@@ -41,10 +42,14 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
     Emitter<AuthBlocState> emit,
   ) async {
     final result = await verifyOtpUsecase(request: event.requestModel);
-    result.fold(
-      (f) => emit(AuthFailed(f.message)),
-      (r) => emit(AuthAuthenticated(event.user)),
-    );
+    result.fold((f) => emit(AuthFailed(f.message)), (r) async {
+      log("start save user token ");
+      final issaved = await cachTokenUsecase(token: r.accessToken);
+      if (issaved.isRight() && issaved == true) {
+        log("saved successfully");
+      }
+      emit(AuthAuthenticated(event.user));
+    });
   }
 
   Future<void> _authCheckSesssion(
@@ -56,7 +61,7 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
 
     result.fold(
       (e) {
-        emit(AuthFailed(e.message));
+        emit(AuthUnAuthenticated());
       },
       (token) async {
         if (token == null) {
@@ -64,7 +69,7 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
         } else {
           final user = await getCachedUserUseCase();
           user.fold((f) {
-            emit(AuthFailed("try again"));
+            emit(AuthUnAuthenticated());
           }, (r) => emit(AuthAuthenticated(r)));
         }
       },
@@ -75,9 +80,10 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
     AuthSignUpAsPatietn event,
     Emitter<AuthBlocState> emit,
   ) async {
-    emit(AuthLoading());
+    // emit(AuthLoading());09
     final res = await signUpUseCase(authRequest: event.patient);
     res.fold((f) => emit(AuthFailed(f.message)), (user) async {
+      // final usersave= await cachuser
       emit(AuthWaitingOtpVerify(user: user));
     });
   }

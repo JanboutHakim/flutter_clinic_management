@@ -13,7 +13,9 @@ class Providers extends StatelessWidget {
       providers: [
         BlocProvider<UserRoleCubitCubit>(create: (_) => UserRoleCubitCubit()),
 
-        BlocProvider<AuthBlocBloc>(create: (_) => di.getIt<AuthBlocBloc>()),
+        BlocProvider<AuthBlocBloc>(
+          create: (_) => di.getIt<AuthBlocBloc>()..add(AuthCheckUserSession()),
+        ),
       ],
 
       child: child,

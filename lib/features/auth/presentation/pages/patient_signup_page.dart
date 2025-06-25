@@ -71,7 +71,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Registered successfully')),
           );
-          _clearControllers();
+          // _clearControllers();
         } else if (state is AuthFailed) {
           ScaffoldMessenger.of(
             context,
@@ -280,7 +280,6 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                   validator:
                       (value) =>
                           value == null || value.isEmpty ? 'Required' : null,
-                  onChanged: (_) => setState(() {}),
                 ),
                 const SizedBox(height: 12),
                 TextFormField(

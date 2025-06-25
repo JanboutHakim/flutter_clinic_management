@@ -14,10 +14,10 @@ import 'package:doclib/features/auth/domain/entities/user.dart';
 import 'package:doclib/features/auth/domain/repositories/auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  final AuthRemoteDataSource authRemoteDataSourece;
+  final AuthRemoteDataSource authRemoteDataSource;
   final AuthLocalDataSource authLocalDataSource;
   AuthRepositoryImpl({
-    required this.authRemoteDataSourece,
+    required this.authRemoteDataSource,
     required this.authLocalDataSource,
   });
 
@@ -26,9 +26,7 @@ class AuthRepositoryImpl implements AuthRepository {
     required AuthRequest authRequest,
   }) async {
     try {
-      final entity = await authRemoteDataSourece.login(
-        authrequest: authRequest,
-      );
+      final entity = await authRemoteDataSource.login(authrequest: authRequest);
       return right(entity.toEntity());
     } on AppException catch (e) {
       return left(ErrorMapper.map(e));
@@ -43,7 +41,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }) async {
     late User user;
     try {
-      final model = await authRemoteDataSourece.register(
+      final model = await authRemoteDataSource.register(
         authRequest: authRequest,
       );
       log(model.runtimeType.toString());
@@ -53,8 +51,8 @@ class AuthRepositoryImpl implements AuthRepository {
         r == true
             ? user = model.toEntity()
             : {
-              log("succes but not saved after sign up  "),
-              user = user = model.toEntity(),
+              log("success but not saved after sign up "),
+              user = model.toEntity(),
             };
       });
       return Right(user);
@@ -122,7 +120,7 @@ class AuthRepositoryImpl implements AuthRepository {
     required OtpRequestModel request,
   }) async {
     try {
-      final response = await authRemoteDataSourece.otpVerify(request: request);
+      final response = await authRemoteDataSource.otpVerify(request: request);
       return right(response);
     } on UnauthorizedException {
       return left(AuthFailure("UnAuthorized"));

@@ -15,6 +15,7 @@ class AccountRootPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBlocBloc, AuthBlocState>(
       builder: (context, state) {
+        debugPrint(state.runtimeType.toString());
         if (state is AuthUnAuthenticated) {
           return PatientSignupPage();
         } else if (state is AuthLoading) {
@@ -24,7 +25,7 @@ class AccountRootPage extends StatelessWidget {
         } else if (state is AuthAuthenticated) {
           return LoginPage();
         } else {
-          return const Text("hiii");
+          return const PatientSignupPage();
         }
       },
     );
