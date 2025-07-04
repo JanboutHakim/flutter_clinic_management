@@ -18,18 +18,18 @@ part 'auth_bloc_state.dart';
 
 class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
   final SignUpUseCase signUpUseCase;
-  final LoginUsecase loginUsecase;
-  final GetCachedTokenUsecase getCachedTokenUsecase;
-  final CachTokenUsecase cachTokenUsecase;
+  final LoginUsecase loginUseCase;
+  final GetCachedTokenUsecase getCachedTokenUseCase;
+  final CachTokenUsecase cachTokenUseCase;
   final GetCachedUserUseCase getCachedUserUseCase;
-  final VerifyOtpUsecase verifyOtpUsecase;
+  final VerifyOtpUsecase verifyOtpUseCase;
   AuthBlocBloc({
-    required this.verifyOtpUsecase,
+    required this.verifyOtpUseCase,
     required this.getCachedUserUseCase,
-    required this.loginUsecase,
+    required this.loginUseCase,
     required this.signUpUseCase,
-    required this.cachTokenUsecase,
-    required this.getCachedTokenUsecase,
+    required this.cachTokenUseCase,
+    required this.getCachedTokenUseCase,
   }) : super(AuthBlocInitial()) {
     on<AuthSignUpAsPatietn>(_authsignup);
     on<AuthSignIn>(_authsigin);
@@ -41,10 +41,13 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
     AuthOtpVerify event,
     Emitter<AuthBlocState> emit,
   ) async {
-    final result = await verifyOtpUsecase(request: event.requestModel);
+    final result = await verifyOtpUseCase(request: event.requestModel);
     result.fold((f) => emit(AuthFailed(f.message)), (r) async {
       log("start save user token ");
-      final issaved = await cachTokenUsecase(token: r.accessToken);
+      final issaved = await cachTokenUseCase(
+        aToken: r.accessToken,
+        rToken: r.refreshToken,
+      );
       if (issaved.isRight() && issaved == true) {
         log("saved successfully");
       }
@@ -57,21 +60,17 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
     Emitter<AuthBlocState> emit,
   ) async {
     emit(AuthLoading());
-    final result = await getCachedTokenUsecase();
+    final result = await getCachedTokenUseCase();
 
     result.fold(
       (e) {
         emit(AuthUnAuthenticated());
       },
       (token) async {
-        if (token == null) {
+        final user = await getCachedUserUseCase();
+        user.fold((f) {
           emit(AuthUnAuthenticated());
-        } else {
-          final user = await getCachedUserUseCase();
-          user.fold((f) {
-            emit(AuthUnAuthenticated());
-          }, (r) => emit(AuthAuthenticated(r)));
-        }
+        }, (r) => emit(AuthAuthenticated(r)));
       },
     );
   }
@@ -90,7 +89,7 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
 
   Future<void> _authsigin(AuthSignIn event, Emitter<AuthBlocState> emit) async {
     emit(AuthLoading());
-    final res = await loginUsecase(authRequest: event.authRequest);
+    final res = await loginUseCase(authRequest: event.authRequest);
     res.fold((f) => emit(AuthFailed(f.message)), (user) {
       emit(AuthAuthenticated(user));
     });

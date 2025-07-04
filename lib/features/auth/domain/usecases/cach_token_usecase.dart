@@ -5,7 +5,10 @@ import 'package:doclib/features/auth/domain/repositories/auth_repository.dart';
 class CachTokenUsecase {
   final AuthRepository authRepository;
   const CachTokenUsecase(this.authRepository);
-  Future<Either<Failure, bool>> call({required String token}) {
-    return authRepository.cachToken(token: token);
+  Future<Either<Failure, bool>> call({
+    required String aToken,
+    required String rToken,
+  }) {
+    return authRepository.cachToken(aToken: aToken, rToken: rToken);
   }
 }

@@ -3,17 +3,16 @@
 import 'package:doclib/features/auth/domain/entities/user.dart';
 
 abstract class UserModel extends User {
-  // final String password;
   UserModel({
-    // required this.password,
     required super.userName,
     super.id,
-    required super.birthDate,
+    required super.dob,
     required super.fullName,
     required super.phonNumber,
     required super.userGender,
     required super.userRoleEnum,
-    super.token,
+    super.accessToken,
+    super.refreshToken,
   });
   User toEntity();
   UserModel fromJson(Map<String, dynamic> json);

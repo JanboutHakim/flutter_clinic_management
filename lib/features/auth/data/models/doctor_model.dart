@@ -18,8 +18,9 @@ class DoctorModel extends UserModel {
     required this.address,
     required this.appointments,
     required this.patients,
-    required super.token,
-    required super.birthDate,
+    super.accessToken,
+    super.refreshToken,
+    required super.dob,
     required super.fullName,
     required super.phonNumber,
     required super.userGender,
@@ -33,7 +34,7 @@ class DoctorModel extends UserModel {
     address: json['address'],
     appointments: (json['appointments'] as List<Object>? ?? []).toList(),
     patients: (json['patients'] as List<Object>? ?? []).toList(),
-    birthDate: DateTime.parse(json['birthDate']),
+    dob: DateTime.parse(json['birthDate']),
     fullName: json['Name'],
     phonNumber: json['phonNumber'],
     userGender: GenderEnum.values.firstWhere(
@@ -42,23 +43,23 @@ class DoctorModel extends UserModel {
     userRoleEnum: UserRoleEnum.values.firstWhere(
       (e) => e.name == json['userRoleEnum'],
     ),
-    token: json['token'],
     id: json["id"],
     // password: json["password"],
   );
 
   @override
   Map<String, dynamic> toJson() => {
-    'birthDate': birthDate.toIso8601String(),
+    'birthDate': dob.toIso8601String(),
     'Name': fullName,
     'phonNumber': phonNumber,
     'userGender': userGender.displayName,
     'userRoleEnum': userRoleEnum.displayName,
-    'token': token,
+    'token': refreshToken,
     'spec': spec,
     'address': address,
     'appointments': appointments,
     'patients': patients,
+    'refreshtoken': refreshToken,
   };
 
   @override
@@ -67,10 +68,11 @@ class DoctorModel extends UserModel {
       yearsOfExperience: yearsOfExperience,
       spec: spec,
       address: address,
-      appointments: List<Object>.from(appointments),
-      patients: List<Object>.from(patients),
-      token: token,
-      birthDate: birthDate,
+      appointments: List<String>.from(appointments),
+      patients: List<String>.from(patients),
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+      dob: dob,
       fullName: fullName,
       phonNumber: phonNumber,
       userRoleEnum: userRoleEnum,

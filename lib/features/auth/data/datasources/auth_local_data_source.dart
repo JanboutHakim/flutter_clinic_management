@@ -8,21 +8,22 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AuthLocalDataSource {
   ///add recieved token to lacal storge
-  Future<bool> cacheToken(String token);
+  Future<bool> cacheTokens(String aAoken, String tToken);
   Future<bool> cacheUserData(UserModel user);
-  Future<String?> getCachedToken();
+  Future<List<String?>> getCachedToken();
   Future<UserModel?> getCachedUser();
-  Future<void> clearAll(); // useful for logout
+  Future<void> clearAll();
 }
 
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   final SharedPreferences localBox;
   const AuthLocalDataSourceImpl(this.localBox);
   @override
-  Future<bool> cacheToken(String token) async {
+  Future<bool> cacheTokens(String aToken, String rToken) async {
     try {
-      final succes = await localBox.setString(cons.access_Token, token);
-      return succes;
+      final savedAToken = await localBox.setString(cons.access_Token, aToken);
+      final savedRToken = await localBox.setString(cons.refresh_Token, rToken);
+      return savedAToken && savedRToken;
     } catch (e) {
       throw CacheException("error when save token");
     }
@@ -43,13 +44,17 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   }
 
   @override
-  Future<String?> getCachedToken() async {
+  Future<List<String?>> getCachedToken() async {
+    List<String?> tokens = [];
     try {
-      final token = localBox.getString(cons.access_Token);
-      return token;
+      final aToken = localBox.getString(cons.access_Token);
+
+      final rToken = localBox.getString(cons.refresh_Token);
+      tokens = [aToken, rToken];
+      return tokens;
     } catch (e) {
       log("local data source error Token not exists ${e.toString()}");
-      return null;
+      throw CacheException();
     }
   }
 

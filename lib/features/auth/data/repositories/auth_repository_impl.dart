@@ -63,17 +63,20 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> cachToken({required String token}) async {
+  Future<Either<Failure, bool>> cachToken({
+    required String aToken,
+    required String rToken,
+  }) async {
     try {
-      final succes = await authLocalDataSource.cacheToken(token);
-      return right(succes);
+      final success = await authLocalDataSource.cacheTokens(aToken, rToken);
+      return right(success);
     } catch (e) {
       return left(CachFailure("error when cash token"));
     }
   }
 
   @override
-  Future<Either<Failure, String?>> getCahedToken() async {
+  Future<Either<Failure, List<String?>>> getCahedToken() async {
     try {
       final token = await authLocalDataSource.getCachedToken();
       return right(token);

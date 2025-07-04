@@ -1,5 +1,7 @@
 import 'package:doclib/core/constants/gender_enum.dart';
 import 'package:doclib/core/constants/user_role_enum.dart';
+import 'package:doclib/features/appointments/data/models/appointment_model.dart';
+import 'package:doclib/features/appointments/domain/appointments.dart';
 import 'package:doclib/features/auth/data/models/user_model.dart';
 import 'package:doclib/features/auth/domain/entities/patient.dart';
 
@@ -36,7 +38,7 @@ import 'package:doclib/features/auth/domain/entities/patient.dart';
 /// ```
 class PatientModel extends UserModel {
   /// List of appointment identifiers or details related to the patient.
-  final List<String>? appointments;
+  final List<Appointment>? appointments;
 
   /// List of drug identifiers or names prescribed to the patient.
   final List<String>? drugs;
@@ -47,8 +49,9 @@ class PatientModel extends UserModel {
   PatientModel({
     required super.userName,
     super.id,
-    super.token,
-    required super.birthDate,
+    super.accessToken,
+    super.refreshToken,
+    required super.dob,
     required super.fullName,
     required super.phonNumber,
     required super.userGender,
@@ -61,17 +64,24 @@ class PatientModel extends UserModel {
   /// Parses a [PatientModel] from a JSON map.
   factory PatientModel.fromJson(Map<String, dynamic> json) {
     return PatientModel(
-      appointments: null, // Replace with JSON parsing if available
+      appointments:
+          json['patient']?['appointments'] != null
+              ? List<Appointment>.from(
+                (json['patient']['appointments'] as List).map(
+                  (appointmentJson) =>
+                      AppointmentModel.fromJson(appointmentJson),
+                ),
+              )
+              : null, // Replace with JSON parsing if available
       drugs: null,
       documents: null,
-      birthDate: DateTime.parse(json['DOB']),
+      dob: DateTime.parse(json['DOB']),
       fullName: json['name'].toString(),
       phonNumber: json['phoneNumber'].toString(),
       userGender: GenderEnum.values.firstWhere(
         (e) => e.displayName == json['gender'],
       ),
       userRoleEnum: UserRoleEnum.patient,
-      token: json['token'],
       id: json["id"].toString(),
       userName: json['username'],
     );
@@ -83,15 +93,15 @@ class PatientModel extends UserModel {
     return Patient(
       appointments: appointments,
       drugs: drugs,
-      documents: documents,
       fullName: fullName,
-      birthDate: birthDate,
+      dob: dob,
       phonNumber: phonNumber,
       userRoleEnum: userRoleEnum,
       userGender: userGender,
-      token: token,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
       userName: userName,
-      id: id,
+      patientId: id,
     );
   }
 
@@ -108,10 +118,11 @@ class PatientModel extends UserModel {
       'name': fullName,
       'email': '', // Add if available
       'phoneNumber': phonNumber,
-      'DOB': birthDate.toIso8601String(),
+      'DOB': dob.toIso8601String(),
       'role': userRoleEnum.name,
       'gender': userGender.displayName,
-      'token': token,
+      'token': accessToken,
+      'refreshtoken': refreshToken,
       'appointments': appointments,
       'drugs': drugs,
       'documents': documents,

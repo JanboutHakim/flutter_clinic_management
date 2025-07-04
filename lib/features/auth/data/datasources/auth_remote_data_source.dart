@@ -23,6 +23,7 @@ class AuthRemoteDataSoureceImpl implements AuthRemoteDataSource {
   final http.Client client;
   AuthRemoteDataSoureceImpl({required this.client});
 
+  @override
   Future<TokensResponse> otpVerify({required OtpRequestModel request}) async {
     log("start sending otp verification ");
     final url = Uri.parse('${cons.api}/auth/verify-otp');

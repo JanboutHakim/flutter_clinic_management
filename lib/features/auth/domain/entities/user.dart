@@ -3,19 +3,21 @@ import 'package:doclib/core/constants/user_role_enum.dart';
 
 class User {
   final String? id;
-  final String? token;
+  final String? accessToken;
+  final String? refreshToken;
   final String userName;
   final String fullName;
   final String phonNumber;
   final GenderEnum userGender;
-  final DateTime birthDate;
+  final DateTime dob;
   final UserRoleEnum userRoleEnum;
   User({
     this.id,
-    this.token,
+    this.accessToken,
+    this.refreshToken,
     required this.userName,
     required this.fullName,
-    required this.birthDate,
+    required this.dob,
     required this.phonNumber,
     required this.userRoleEnum,
     required this.userGender,

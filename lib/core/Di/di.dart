@@ -100,11 +100,11 @@ Future<void> initAuthFuture() async {
   // 5. Register BLoC (assuming it takes use cases as parameters)
   getIt.registerFactory<AuthBlocBloc>(
     () => AuthBlocBloc(
-      verifyOtpUsecase: getIt<VerifyOtpUsecase>(),
+      verifyOtpUseCase: getIt<VerifyOtpUsecase>(),
       getCachedUserUseCase: getIt<GetCachedUserUseCase>(),
-      cachTokenUsecase: getIt<CachTokenUsecase>(),
-      getCachedTokenUsecase: getIt<GetCachedTokenUsecase>(),
-      loginUsecase: getIt<LoginUsecase>(),
+      cachTokenUseCase: getIt<CachTokenUsecase>(),
+      getCachedTokenUseCase: getIt<GetCachedTokenUsecase>(),
+      loginUseCase: getIt<LoginUsecase>(),
       signUpUseCase: getIt<SignUpUseCase>(),
     ),
   );
