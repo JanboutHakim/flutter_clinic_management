@@ -3,8 +3,8 @@ import 'package:doclib/core/constants/user_role_enum.dart';
 
 class User {
   final String? id;
-  final String? accessToken;
-  final String? refreshToken;
+  late final String? accessToken;
+  late final String? refreshToken;
   final String userName;
   final String fullName;
   final String phonNumber;

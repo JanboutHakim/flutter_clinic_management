@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:doclib/features/auth/data/models/Auth_model.dart';
 import 'package:doclib/features/auth/data/models/otp_request_model.dart';
@@ -12,7 +11,6 @@ import 'package:doclib/features/auth/domain/usecases/login_usecase.dart';
 import 'package:doclib/features/auth/domain/usecases/signup_usecase.dart';
 import 'package:doclib/features/auth/domain/usecases/verify_otp_usecase.dart';
 import 'package:equatable/equatable.dart';
-
 part 'auth_bloc_event.dart';
 part 'auth_bloc_state.dart';
 
@@ -33,7 +31,7 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
   }) : super(AuthBlocInitial()) {
     on<AuthSignUpAsPatietn>(_authsignup);
     on<AuthSignIn>(_authsigin);
-    on<AuthCheckUserSession>(_authCheckSesssion);
+    on<AuthCheckUserSession>(_authCheckSession);
     on<AuthOtpVerify>(_authOtpVerify);
   }
 
@@ -44,6 +42,8 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
     final result = await verifyOtpUseCase(request: event.requestModel);
     result.fold((f) => emit(AuthFailed(f.message)), (r) async {
       log("start save user token ");
+      event.user.accessToken = r.accessToken;
+      event.user.refreshToken = r.refreshToken;
       final issaved = await cachTokenUseCase(
         aToken: r.accessToken,
         rToken: r.refreshToken,
@@ -55,11 +55,12 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
     });
   }
 
-  Future<void> _authCheckSesssion(
+  Future<void> _authCheckSession(
     AuthCheckUserSession event,
     Emitter<AuthBlocState> emit,
   ) async {
     emit(AuthLoading());
+    log("start check session available");
     final result = await getCachedTokenUseCase();
 
     result.fold(
@@ -67,6 +68,9 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
         emit(AuthUnAuthenticated());
       },
       (token) async {
+        log(
+          "the access token is ${token[0]} \n the refresh token is ${token[1]} ",
+        );
         final user = await getCachedUserUseCase();
         user.fold((f) {
           emit(AuthUnAuthenticated());
@@ -79,7 +83,7 @@ class AuthBlocBloc extends Bloc<AuthBlocEvent, AuthBlocState> {
     AuthSignUpAsPatietn event,
     Emitter<AuthBlocState> emit,
   ) async {
-    // emit(AuthLoading());09
+    emit(AuthLoading());
     final res = await signUpUseCase(authRequest: event.patient);
     res.fold((f) => emit(AuthFailed(f.message)), (user) async {
       // final usersave= await cachuser

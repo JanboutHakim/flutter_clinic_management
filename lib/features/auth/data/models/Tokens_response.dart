@@ -2,7 +2,7 @@ class TokensResponse {
   final String accessToken;
   final String refreshToken;
   final String message;
-  final String success;
+  final bool success;
 
   const TokensResponse({
     required this.accessToken,
@@ -16,7 +16,7 @@ class TokensResponse {
       accessToken: json['accessToken'].toString(),
       refreshToken: json['refreshToken'].toString(),
       message: json['message'].toString(),
-      success: json['success'].toString(),
+      success: json['success'].toString() == "true" ? true : false,
     );
   }
 
@@ -25,7 +25,7 @@ class TokensResponse {
       'accessToken': accessToken,
       'refreshToken': refreshToken,
       'message': message,
-      'success': success,
+      'success': success.toString(),
     };
   }
 }

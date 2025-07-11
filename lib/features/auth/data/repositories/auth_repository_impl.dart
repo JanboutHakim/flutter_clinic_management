@@ -26,8 +26,8 @@ class AuthRepositoryImpl implements AuthRepository {
     required AuthRequest authRequest,
   }) async {
     try {
-      final entity = await authRemoteDataSource.login(authrequest: authRequest);
-      return right(entity.toEntity());
+      final model = await authRemoteDataSource.login(authrequest: authRequest);
+      return right(model.toEntity());
     } on AppException catch (e) {
       return left(ErrorMapper.map(e));
     } catch (e) {
@@ -55,6 +55,9 @@ class AuthRepositoryImpl implements AuthRepository {
               user = model.toEntity(),
             };
       });
+      log(
+        "user after sign up is ${user.userRoleEnum} and the name is  ${user.fullName}",
+      );
       return Right(user);
     } catch (e, stack) {
       log(stack.toString());
@@ -83,7 +86,7 @@ class AuthRepositoryImpl implements AuthRepository {
     } catch (e) {
       return left(
         CachFailure(
-          "error when get the local token / the exeption is  ${e.runtimeType}",
+          "error when get the local token / the exception is  ${e.runtimeType}",
         ),
       );
     }
@@ -98,7 +101,7 @@ class AuthRepositoryImpl implements AuthRepository {
       }
     } catch (e, s) {
       log(s.toString());
-      return left(CachFailure("error "));
+      return left(CachFailure("error"));
     }
     throw CacheException();
   }
@@ -107,12 +110,12 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, User>> getCacheduser() async {
     try {
       final user = await authLocalDataSource.getCachedUser();
-      if (user == null)
-        // ignore: curly_braces_in_flow_control_structures
-        return left(CachFailure("there is no user data localy"));
-      else
-        // ignore: curly_braces_in_flow_control_structures
+      if (user == null) {
+        return left(CachFailure("there is no user data locally"));
+      } else {
+        log(user.toString());
         return Right(user.toEntity());
+      }
     } catch (e) {
       return left(CachFailure("no data"));
     }
